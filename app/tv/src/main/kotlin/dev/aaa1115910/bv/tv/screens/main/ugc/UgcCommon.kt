@@ -55,9 +55,12 @@ fun UgcRegionScaffold(
     childRegionButtons: (@Composable () -> Unit)? = null
 ) {
     val context = LocalContext.current
-    var currentFocusedIndex by remember { mutableIntStateOf(0) }
+    var currentFocusedIndex by remember { mutableIntStateOf(-1) }
     val shouldLoadMore by remember {
-        derivedStateOf { currentFocusedIndex + 24 > ugcViewModel.ugcItems.size }
+        derivedStateOf {
+            val listSize = ugcViewModel.ugcItems.size
+            listSize > 0 && currentFocusedIndex >= (listSize - 8).coerceAtLeast(0)
+        }
     }
 
     LaunchedEffect(shouldLoadMore) {

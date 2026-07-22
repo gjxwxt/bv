@@ -38,9 +38,12 @@ fun RecommendScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var currentFocusedIndex by remember { mutableIntStateOf(0) }
+    var currentFocusedIndex by remember { mutableIntStateOf(-1) }
     val shouldLoadMore by remember {
-        derivedStateOf { currentFocusedIndex + 24 > recommendViewModel.recommendVideoList.size }
+        derivedStateOf {
+            val listSize = recommendViewModel.recommendVideoList.size
+            listSize > 0 && currentFocusedIndex >= (listSize - 8).coerceAtLeast(0)
+        }
     }
 
     val onClickVideo: (UgcItem) -> Unit = { ugcItem ->

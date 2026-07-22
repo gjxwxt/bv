@@ -41,9 +41,12 @@ fun DynamicsScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var currentFocusedIndex by remember { mutableIntStateOf(0) }
+    var currentFocusedIndex by remember { mutableIntStateOf(-1) }
     val shouldLoadMore by remember {
-        derivedStateOf { currentFocusedIndex + 24 > dynamicViewModel.dynamicVideoList.size }
+        derivedStateOf {
+            val listSize = dynamicViewModel.dynamicVideoList.size
+            listSize > 0 && currentFocusedIndex >= (listSize - 8).coerceAtLeast(0)
+        }
     }
 
     val onClickVideo: (DynamicVideo) -> Unit = { dynamic ->
