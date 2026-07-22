@@ -36,7 +36,7 @@ class UserSpaceViewModel(
     var currentOrder by mutableStateOf(SpaceVideoOrder.PubDate)
 
     private var page = SpaceVideoPage()
-    private var updating = false
+    var updating by mutableStateOf(false)
     val noMore get() = !page.hasNext
 
     fun clearData() {

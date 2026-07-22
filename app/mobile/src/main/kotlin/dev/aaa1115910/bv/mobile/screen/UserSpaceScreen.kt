@@ -27,6 +27,15 @@ import dev.aaa1115910.bv.mobile.component.videocard.UpSpaceVideoItem
 import dev.aaa1115910.bv.viewmodel.user.UserSpaceViewModel
 import org.koin.androidx.compose.koinViewModel
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.dp
+import dev.aaa1115910.bv.util.OnBottomReached
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserSpaceScreen(
@@ -34,9 +43,15 @@ fun UserSpaceScreen(
     userSpaceViewModel: UserSpaceViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
-
+    val listState = rememberLazyListState()
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+
+    listState.OnBottomReached(loading = userSpaceViewModel.updating) {
+        if (!userSpaceViewModel.noMore) {
+            userSpaceViewModel.update()
+        }
+    }
 
     LaunchedEffect(Unit) {
         val intent = (context as Activity).intent
@@ -70,22 +85,44 @@ fun UserSpaceScreen(
             )
         }
     ) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier.padding(top = innerPadding.calculateTopPadding())
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = innerPadding.calculateTopPadding())
         ) {
-            items(items = userSpaceViewModel.spaceVideos) { video ->
-                UpSpaceVideoItem(
-                    spaceVideo = video,
-                    onClick = {
-                        VideoPlayerActivity.actionStart(
-                            context = context,
-                            aid = video.aid
+            if (userSpaceViewModel.spaceVideos.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (userSpaceViewModel.updating) {
+                        CircularProgressIndicator()
+                    } else {
+                        Button(onClick = { userSpaceViewModel.update() }) {
+                            Text("暂无视频或加载失败，点击重试")
+                        }
+                    }
+                }
+            } else {
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(items = userSpaceViewModel.spaceVideos) { video ->
+                        UpSpaceVideoItem(
+                            spaceVideo = video,
+                            onClick = {
+                                VideoPlayerActivity.actionStart(
+                                    context = context,
+                                    aid = video.aid
+                                )
+                            }
                         )
                     }
-                )
-            }
-            item {
-                Spacer(modifier = Modifier.navigationBarsPadding())
+                    item {
+                        Spacer(modifier = Modifier.navigationBarsPadding())
+                    }
+                }
             }
         }
     }

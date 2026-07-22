@@ -30,6 +30,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+import dev.aaa1115910.biliapi.repositories.VideoDetailRepository
+import org.koin.android.ext.android.inject
+
 class VideoPlayerActivity : ComponentActivity() {
     companion object {
         fun actionStart(
@@ -55,6 +58,7 @@ class VideoPlayerActivity : ComponentActivity() {
     private val playerViewModel: VideoPlayerV3ViewModel by viewModel()
     private val commentViewModel: CommentViewModel by viewModel()
     private val videoDetailViewModel: VideoDetailViewModel by viewModel()
+    private val videoDetailRepository: VideoDetailRepository by inject()
     private val logger = KotlinLogging.logger {}
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
@@ -109,11 +113,26 @@ class VideoPlayerActivity : ComponentActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             if (aid == 0L && cid == 0L) {
                 runCatching {
-                    val acid = BiliHttpApi.getAidCidByEpid(epid)!!
-                    aid = acid.first
-                    cid = acid.second
+                    if (epid != 0) {
+                        val acid = BiliHttpApi.getAidCidByEpid(epid)
+                        if (acid != null) {
+                            aid = acid.first
+                            cid = acid.second
+                        }
+                    }
+                    if (aid == 0L && seasonId != 0) {
+                        val seasonDetail = videoDetailRepository.getPgcVideoDetail(
+                            seasonId = seasonId,
+                            preferApiType = Prefs.apiType
+                        )
+                        val firstEp = seasonDetail.episodes.firstOrNull()
+                        if (firstEp != null) {
+                            aid = firstEp.aid
+                            cid = firstEp.cid
+                        }
+                    }
                 }.onFailure {
-                    logger.fInfo { "get avid & cid by epid failed: ${it.stackTraceToString()}" }
+                    logger.fInfo { "get avid & cid failed: ${it.stackTraceToString()}" }
                     withContext(Dispatchers.Main) {
                         it.message?.toast(this@VideoPlayerActivity)
                     }

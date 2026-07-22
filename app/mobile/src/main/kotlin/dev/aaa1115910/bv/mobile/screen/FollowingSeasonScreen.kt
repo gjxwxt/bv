@@ -40,9 +40,13 @@ import dev.aaa1115910.bv.mobile.theme.BVMobileTheme
 import dev.aaa1115910.bv.util.OnBottomReached
 import dev.aaa1115910.bv.util.calculateWindowSizeClassInPreview
 import dev.aaa1115910.bv.util.getDisplayName
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 import dev.aaa1115910.bv.viewmodel.user.FollowingSeasonViewModel
 import org.koin.androidx.compose.koinViewModel
-
 import dev.aaa1115910.bv.mobile.activities.VideoPlayerActivity
 
 @Composable
@@ -95,8 +99,20 @@ private fun FollowingSeasonContent(
     onClickSeason: (SeasonCardData) -> Unit,
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    val pagerState = rememberPagerState(
+        initialPage = type.ordinal,
+        pageCount = { FollowingSeasonType.entries.size }
+    )
+
+    LaunchedEffect(pagerState.currentPage) {
+        val newType = FollowingSeasonType.entries[pagerState.currentPage]
+        if (newType != type) {
+            onTypeChange(newType)
+        }
+    }
 
     Scaffold(
         modifier = modifier
@@ -116,31 +132,37 @@ private fun FollowingSeasonContent(
                     scrollBehavior = scrollBehavior
                 )
                 PrimaryTabRow(
-                    selectedTabIndex = type.ordinal,
+                    selectedTabIndex = pagerState.currentPage,
                 ) {
-                    FollowingSeasonType.entries.forEach { seasonType ->
+                    FollowingSeasonType.entries.forEachIndexed { index, seasonType ->
                         Tab(
-                            selected = type == seasonType,
+                            selected = pagerState.currentPage == index,
                             text = { Text(text = seasonType.getDisplayName(context)) },
-                            onClick = { onTypeChange(seasonType) }
+                            onClick = {
+                                scope.launch { pagerState.animateScrollToPage(index) }
+                            }
                         )
                     }
                 }
             }
         },
     ) { innerPadding ->
-        LazyVerticalGrid(
-            modifier = Modifier.padding(top = innerPadding.calculateTopPadding()),
-            columns = GridCells.Adaptive(100.dp),
-            contentPadding = PaddingValues(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.padding(top = innerPadding.calculateTopPadding())
         ) {
-            itemsIndexed(seasons) { index, season ->
-                SeasonCard(
-                    data = season,
-                    onClick = { onClickSeason(season) }
-                )
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(100.dp),
+                contentPadding = PaddingValues(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                itemsIndexed(seasons) { index, season ->
+                    SeasonCard(
+                        data = season,
+                        onClick = { onClickSeason(season) }
+                    )
+                }
             }
         }
     }
