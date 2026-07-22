@@ -132,6 +132,7 @@ class VideoPlayerActivity : ComponentActivity() {
             }
             runCatching {
                 playerViewModel.fromSeason = fromSeason
+                playerViewModel.lastPlayed = videoDetailViewModel.videoDetail?.history?.progress ?: 0
                 playerViewModel.loadPlayUrl(
                     avid = videoDetailViewModel.videoDetail?.aid ?: 0,
                     cid = videoDetailViewModel.videoDetail?.cid ?: 0,

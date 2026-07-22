@@ -18,6 +18,7 @@ import dev.aaa1115910.bv.util.fInfo
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
@@ -65,7 +66,9 @@ class UserSpaceViewModel(
                 page = page,
                 preferApiType = Prefs.apiType
             )
-            spaceVideos.addAll(spaceVideoData.videos)
+            withContext(Dispatchers.Main) {
+                spaceVideos.addAll(spaceVideoData.videos)
+            }
             spaceVideoData.videos.forEach { spaceVideoItem ->
                 tvSpaceVideos.addWithMainContext(
                     VideoCardData(

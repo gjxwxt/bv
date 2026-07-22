@@ -36,27 +36,27 @@ data class FollowingSeasonAppData(
 
 @Serializable
 data class WebFollowingSeason(
-    val badge: String,
+    val badge: String = "",
     @SerialName("badge_ep")
-    val badgeEp: String,
+    val badgeEp: String = "",
     @SerialName("badge_info")
-    val badgeInfo: BadgeInfo,
+    val badgeInfo: BadgeInfo? = null,
     @SerialName("badge_infos")
     val badgeInfos: BadgeInfos? = null,
     @SerialName("badge_type")
-    val badgeType: Int,
+    val badgeType: Int = 0,
     @SerialName("both_follow")
-    val bothFollow: Boolean,
+    val bothFollow: Boolean = false,
     @SerialName("can_watch")
-    val canWatch: Int,
-    val cover: String,
-    val evaluate: String,
+    val canWatch: Int = 0,
+    val cover: String = "",
+    val evaluate: String = "",
     @SerialName("first_ep")
-    val firstEp: Int,
+    val firstEp: Int = 0,
     @SerialName("first_ep_info")
-    val firstEpInfo: EpInfo,
+    val firstEpInfo: EpInfo? = null,
     @SerialName("follow_status")
-    val followStatus: Int,
+    val followStatus: Int = 0,
     @SerialName("formal_ep_count")
     val formalEpCount: Int? = null,
     @SerialName("horizontal_cover_16_10")
@@ -64,26 +64,26 @@ data class WebFollowingSeason(
     @SerialName("horizontal_cover_16_9")
     val horizontalCover169: String? = null,
     @SerialName("is_finish")
-    val isFinish: Int,
+    val isFinish: Int = 0,
     @SerialName("is_new")
-    val isNew: Int,
+    val isNew: Int = 0,
     @SerialName("is_play")
-    val isPlay: Int,
+    val isPlay: Int = 0,
     @SerialName("is_started")
-    val isStarted: Int,
+    val isStarted: Int = 0,
     @SerialName("media_attr")
-    val mediaAttr: Int,
+    val mediaAttr: Int = 0,
     @SerialName("media_id")
-    val mediaId: Int,
-    val mode: Int,
+    val mediaId: Int = 0,
+    val mode: Int = 0,
     @SerialName("new_ep")
-    val newEp: EpInfo,
+    val newEp: EpInfo? = null,
     val producers: List<Producer> = emptyList(),
-    val progress: String,
-    val publish: Publish,
+    val progress: String = "",
+    val publish: Publish? = null,
     @SerialName("renewal_time")
     val renewalTime: String? = null,
-    val rights: Rights,
+    val rights: Rights? = null,
     @SerialName("season_attr")
     val seasonAttr: Int,
     @SerialName("season_id")
