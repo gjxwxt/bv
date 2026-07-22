@@ -90,6 +90,7 @@ data class VideoPlayerConfigData(
     val currentPlayMode: PlayMode = PlayMode.Sequential,
     val incognitoMode: Boolean = false,
     val longPressPlaySpeed: Float = 2f,
+    val autoJumpHistory: Boolean = true,
 )
 
 data class VideoPlayerDanmakuMasksData(

@@ -252,13 +252,19 @@ fun BvPlayer(
         // 此处使用 videoPlayerHistoryData.lastPlayed 无法获取到新值
         //if (videoPlayerHistoryData.lastPlayed > 0 && hideBackToHistoryTimer == null) {
         if (lastPlayed > 0 && hideBackToHistoryTimer == null) {
-            logger.info { "show showBackToHistory: ${videoPlayerHistoryData.lastPlayed}" }
-            showBackToHistory = true
-            hideBackToHistoryTimer = countDownTimer(5000, 1000, "hideBackToHistoryTimer") {
-                showBackToHistory = false
-                hideBackToHistoryTimer = null
-                //playerViewModel.lastPlayed = 0
+            if (videoPlayerConfigData.autoJumpHistory) {
+                logger.info { "auto jump back to history: $lastPlayed" }
+                videoPlayer.seekTo(lastPlayed.toLong() * 1000)
                 onClearBackToHistoryData()
+            } else {
+                logger.info { "show showBackToHistory: ${videoPlayerHistoryData.lastPlayed}" }
+                showBackToHistory = true
+                hideBackToHistoryTimer = countDownTimer(5000, 1000, "hideBackToHistoryTimer") {
+                    showBackToHistory = false
+                    hideBackToHistoryTimer = null
+                    //playerViewModel.lastPlayed = 0
+                    onClearBackToHistoryData()
+                }
             }
         }
     }
