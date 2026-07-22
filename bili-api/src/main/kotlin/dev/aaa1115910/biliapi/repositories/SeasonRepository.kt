@@ -32,35 +32,41 @@ class SeasonRepository(
         preferApiType: ApiType = ApiType.Web
     ): FollowingSeasonData {
         return when (preferApiType) {
-            ApiType.Web -> BiliHttpApi.getFollowingSeasons(
-                type = type.id,
-                status = status.id,
-                pageNumber = pageNumber,
-                pageSize = pageSize,
-                mid = authRepository.mid!!,
-                sessData = authRepository.sessionData
-            ).getResponseData()
-                .let { responseData ->
-                    FollowingSeasonData(
-                        list = responseData.list.map { FollowingSeason.fromFollowingSeason(it) },
-                        total = responseData.total
-                    )
-                }
+            ApiType.Web -> {
+                val mid = authRepository.mid ?: return FollowingSeasonData(emptyList(), 0)
+                BiliHttpApi.getFollowingSeasons(
+                    type = type.id,
+                    status = status.id,
+                    pageNumber = pageNumber,
+                    pageSize = pageSize,
+                    mid = mid,
+                    sessData = authRepository.sessionData
+                ).getResponseData()
+                    .let { responseData ->
+                        FollowingSeasonData(
+                            list = responseData.list.map { FollowingSeason.fromFollowingSeason(it) },
+                            total = responseData.total
+                        )
+                    }
+            }
 
-            ApiType.App -> BiliHttpApi.getFollowingSeasons(
-                type = type.paramName,
-                status = status.id,
-                pageNumber = pageNumber,
-                pageSize = pageSize,
-                build = BiliAppConf.APP_BUILD_CODE,
-                accessKey = authRepository.accessToken!!
-            ).getResponseData()
-                .let { responseData ->
-                    FollowingSeasonData(
-                        list = responseData.followList.map { FollowingSeason.fromFollowingSeason(it) },
-                        total = responseData.total
-                    )
-                }
+            ApiType.App -> {
+                val accessKey = authRepository.accessToken ?: return FollowingSeasonData(emptyList(), 0)
+                BiliHttpApi.getFollowingSeasons(
+                    type = type.paramName,
+                    status = status.id,
+                    pageNumber = pageNumber,
+                    pageSize = pageSize,
+                    build = BiliAppConf.APP_BUILD_CODE,
+                    accessKey = accessKey
+                ).getResponseData()
+                    .let { responseData ->
+                        FollowingSeasonData(
+                            list = responseData.followList.map { FollowingSeason.fromFollowingSeason(it) },
+                            total = responseData.total
+                        )
+                    }
+            }
         }
     }
 
