@@ -100,6 +100,8 @@ fun VideoPlayerController(
 
     val videoPlayerConfigData = LocalVideoPlayerConfigData.current
     var isFastForwarding by remember { mutableStateOf(false) }
+    var showFastForwardHud by remember { mutableStateOf(false) }
+    var hideFastForwardHudTimer: CountDownTimer? by remember { mutableStateOf(null) }
     var normalSpeedBeforeFastForward by remember { mutableFloatStateOf(1f) }
 
     var showListController by remember { mutableStateOf(false) }
@@ -208,6 +210,11 @@ fun VideoPlayerController(
                                 logger.fInfo { "[${it.key}] long press -> fast forward" }
                                 normalSpeedBeforeFastForward = videoPlayerConfigData.currentVideoSpeed
                                 isFastForwarding = true
+                                showFastForwardHud = true
+                                hideFastForwardHudTimer?.cancel()
+                                hideFastForwardHudTimer = countDownTimer(1200, 1000, "hideFastForwardHudTimer") {
+                                    showFastForwardHud = false
+                                }
                                 onPlaySpeedChange(videoPlayerConfigData.longPressPlaySpeed)
                             }
                             return@onPreviewKeyEvent true
@@ -217,6 +224,8 @@ fun VideoPlayerController(
                             if (isFastForwarding) {
                                 logger.fInfo { "release fast forward" }
                                 isFastForwarding = false
+                                showFastForwardHud = false
+                                hideFastForwardHudTimer?.cancel()
                                 onPlaySpeedChange(normalSpeedBeforeFastForward)
                                 return@onPreviewKeyEvent true
                             }
@@ -347,7 +356,7 @@ fun VideoPlayerController(
         }
         AnimatedVisibility(
             modifier = Modifier.align(Alignment.TopCenter),
-            visible = isFastForwarding,
+            visible = showFastForwardHud,
             enter = fadeIn(),
             exit = fadeOut(),
             label = "FastForwardHUD"

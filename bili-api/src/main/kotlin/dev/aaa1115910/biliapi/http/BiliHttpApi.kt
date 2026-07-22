@@ -1612,7 +1612,14 @@ object BiliHttpApi {
     )
 
     suspend fun download(url: String): ByteArray {
-        return client.get(url).readRawBytes()
+        val targetUrl = when {
+            url.startsWith("//") -> "https:$url"
+            !url.startsWith("http://") && !url.startsWith("https://") -> "https://$url"
+            else -> url
+        }
+        return client.get(targetUrl) {
+            header("referer", "https://www.bilibili.com")
+        }.readRawBytes()
     }
 
     suspend fun getWebVideoShot(
