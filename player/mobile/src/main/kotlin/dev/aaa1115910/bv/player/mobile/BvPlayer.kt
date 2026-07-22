@@ -199,6 +199,15 @@ fun BvPlayer(
         }
     }
 
+    LaunchedEffect(videoPlayerHistoryData.lastPlayed) {
+        if (videoPlayerHistoryData.lastPlayed > 0) {
+            lastPlayed = videoPlayerHistoryData.lastPlayed.toLong()
+            if (isPlaying) {
+                updateBackToHistory()
+            }
+        }
+    }
+
     val videoPlayerListener = object : VideoPlayerListener {
         override fun onError(error: Exception) {
             println("onError: $error")

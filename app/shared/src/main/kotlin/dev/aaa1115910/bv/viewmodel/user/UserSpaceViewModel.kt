@@ -39,6 +39,13 @@ class UserSpaceViewModel(
     private var updating = false
     val noMore get() = !page.hasNext
 
+    fun clearData() {
+        page = SpaceVideoPage()
+        updating = false
+        spaceVideos.clear()
+        tvSpaceVideos.clear()
+    }
+
     fun changeOrder(order: SpaceVideoOrder) {
         if (currentOrder == order || updating) return
         logger.fInfo { "Change UP space order to $order" }

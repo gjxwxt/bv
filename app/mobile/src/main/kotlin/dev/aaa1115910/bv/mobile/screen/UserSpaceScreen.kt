@@ -43,6 +43,7 @@ fun UserSpaceScreen(
         if (intent.hasExtra("mid")) {
             val mid = intent.getLongExtra("mid", 0)
             val name = intent.getStringExtra("name") ?: ""
+            userSpaceViewModel.clearData()
             userSpaceViewModel.upMid = mid
             userSpaceViewModel.upName = name
             userSpaceViewModel.update()

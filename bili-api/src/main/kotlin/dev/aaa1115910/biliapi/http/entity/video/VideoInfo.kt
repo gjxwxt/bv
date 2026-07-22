@@ -234,18 +234,18 @@ data class VideoOwner(
 @Serializable
 data class VideoStat(
     val aid: Long = 0,
-    val view: Int = 0,
-    val danmaku: Int = 0,
-    val reply: Int = 0,
-    val favorite: Int = 0,
-    val coin: Int = 0,
-    val share: Int = 0,
+    val view: Long = 0,
+    val danmaku: Long = 0,
+    val reply: Long = 0,
+    val favorite: Long = 0,
+    val coin: Long = 0,
+    val share: Long = 0,
     @SerialName("now_rank")
     val nowRank: Int = 0,
     @SerialName("his_rank")
     val hisRank: Int = 0,
-    val like: Int = 0,
-    val dislike: Int = 0,
+    val like: Long = 0,
+    val dislike: Long = 0,
     val evaluation: String = "",
     @SerialName("argue_msg")
     val argueMsg: String = ""

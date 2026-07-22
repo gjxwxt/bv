@@ -38,8 +38,8 @@ data class RelatedVideo(
                 author = relate.owner.let { Author.fromVideoOwner(it) },
                 jumpToSeason = false,
                 epid = null,
-                view = relate.stat.view,
-                danmaku = relate.stat.danmaku
+                view = relate.stat.view.toInt(),
+                danmaku = relate.stat.danmaku.toInt()
             )
     }
 }

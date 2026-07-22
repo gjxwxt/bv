@@ -64,8 +64,8 @@ data class UgcItem(
                 duration = videoInfo.duration,
                 author = videoInfo.owner.name,
                 cover = videoInfo.pic,
-                play = videoInfo.stat.view,
-                danmaku = videoInfo.stat.danmaku
+                play = videoInfo.stat.view.toInt(),
+                danmaku = videoInfo.stat.danmaku.toInt()
             )
 
         fun fromSmallCoverV5(card: bilibili.app.card.v1.SmallCoverV5) =

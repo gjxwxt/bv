@@ -138,13 +138,13 @@ data class VideoDetail(
             )
 
             fun fromVideoStat(videoStat: VideoStat) = Stat(
-                view = videoStat.view,
-                danmaku = videoStat.danmaku,
-                reply = videoStat.reply,
-                favorite = videoStat.favorite,
-                coin = videoStat.coin,
-                share = videoStat.share,
-                like = videoStat.like,
+                view = videoStat.view.toInt(),
+                danmaku = videoStat.danmaku.toInt(),
+                reply = videoStat.reply.toInt(),
+                favorite = videoStat.favorite.toInt(),
+                coin = videoStat.coin.toInt(),
+                share = videoStat.share.toInt(),
+                like = videoStat.like.toInt(),
                 historyRank = videoStat.hisRank
             )
         }
