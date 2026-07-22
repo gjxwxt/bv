@@ -433,7 +433,7 @@ fun BvPlayerControllerVideoContent(
         )
         BrightnessTip(show = isMovingBrightness, progress = currentBrightnessProgress)
         VolumeTip(show = isMovingVolume, progress = currentVolumeProgress)
-        QuickDoubleSpeedPlaybackTip(show = is2xPlaying)
+        QuickDoubleSpeedPlaybackTip(show = false)
 
         Row(
             modifier = Modifier.fillMaxSize()
