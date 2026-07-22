@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         val uiModeManager = getSystemService(Context.UI_MODE_SERVICE) as? UiModeManager
         val isTelevision = uiModeManager?.currentModeType == Configuration.UI_MODE_TYPE_TELEVISION ||
                 packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)
@@ -33,7 +34,6 @@ class MainActivity : ComponentActivity() {
         installSplashScreen().apply {
             setKeepOnScreenCondition { keepSplashScreen }
         }
-        super.onCreate(savedInstanceState)
 
         setContent {
             val scope = rememberCoroutineScope()
