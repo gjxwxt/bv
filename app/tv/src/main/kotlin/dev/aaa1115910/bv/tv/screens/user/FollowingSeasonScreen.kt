@@ -1,5 +1,6 @@
 package dev.aaa1115910.bv.tv.screens.user
 
+import android.content.Intent
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,16 +30,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.tv.material3.Button
 import androidx.tv.material3.OutlinedButton
 import androidx.tv.material3.Text
 import dev.aaa1115910.biliapi.entity.season.FollowingSeasonStatus
 import dev.aaa1115910.biliapi.entity.season.FollowingSeasonType
 import dev.aaa1115910.bv.R
+import dev.aaa1115910.bv.tv.activities.user.UserInfoActivity
 import dev.aaa1115910.bv.tv.component.videocard.SeasonCard
 import dev.aaa1115910.bv.entity.carddata.SeasonCardData
 import dev.aaa1115910.bv.entity.proxy.ProxyArea
 import dev.aaa1115910.bv.tv.activities.video.SeasonInfoActivity
 import dev.aaa1115910.bv.util.ImageSize
+import dev.aaa1115910.bv.util.Prefs
 import dev.aaa1115910.bv.util.fInfo
 import dev.aaa1115910.bv.util.getDisplayName
 import dev.aaa1115910.bv.util.resizedImageUrl
@@ -196,11 +200,26 @@ fun FollowingSeasonScreen(
                     ) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
-                            Text(text = stringResource(R.string.no_data))
-                            OutlinedButton(onClick = { showFilter = true }) {
-                                Text(text = stringResource(R.string.filter_dialog_open_tip_click))
+                            if (!Prefs.isLogin) {
+                                Text(
+                                    text = "未登录 B 站账号，无法同步个人追番 / 追剧记录",
+                                    color = Color.White.copy(alpha = 0.8f),
+                                    fontSize = 18.sp
+                                )
+                                Button(
+                                    onClick = {
+                                        context.startActivity(Intent(context, UserInfoActivity::class.java))
+                                    }
+                                ) {
+                                    Text(text = "前往【我的】页面登录账号")
+                                }
+                            } else {
+                                Text(text = stringResource(R.string.no_data))
+                                OutlinedButton(onClick = { showFilter = true }) {
+                                    Text(text = stringResource(R.string.filter_dialog_open_tip_click))
+                                }
                             }
                         }
                     }
