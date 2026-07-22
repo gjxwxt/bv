@@ -82,6 +82,7 @@ import dev.aaa1115910.biliapi.entity.Picture
 import dev.aaa1115910.biliapi.entity.reply.Comment
 import dev.aaa1115910.biliapi.entity.reply.CommentSort
 import dev.aaa1115910.bv.R
+import dev.aaa1115910.biliapi.entity.video.season.Section
 import dev.aaa1115910.bv.mobile.activities.VideoPlayerActivity
 import dev.aaa1115910.bv.mobile.component.player.VideoPlayerPages
 import dev.aaa1115910.bv.mobile.component.reply.CommentItem
@@ -460,13 +461,20 @@ fun VideoPlayerScreen(
                                                 )
                                             }
                                             item {
+                                                val pgcSections = remember(seasonVideModel.seasonData) {
+                                                    buildList {
+                                                        if (seasonVideModel.seasonData?.episodes?.isNotEmpty() == true) {
+                                                            add(Section(id = 0, title = "正片", episodes = seasonVideModel.seasonData!!.episodes))
+                                                        }
+                                                        seasonVideModel.seasonData?.sections?.let { addAll(it) }
+                                                    }
+                                                }
                                                 VideoPlayerPages(
                                                     currentCid = playerViewModel.currentCid,
                                                     pages = videoDetailViewModel.videoDetail?.pages
                                                         ?: emptyList(),
                                                     ugcSeason = videoDetailViewModel.videoDetail?.ugcSeason,
-                                                    pgcSections = seasonVideModel.seasonData?.sections
-                                                        ?: emptyList(),
+                                                    pgcSections = pgcSections,
                                                     onClickPage = { videoPage ->
                                                         playerViewModel.loadPlayUrl(
                                                             avid = videoDetailViewModel.videoDetail!!.aid,
