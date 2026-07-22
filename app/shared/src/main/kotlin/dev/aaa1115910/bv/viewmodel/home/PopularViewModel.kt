@@ -62,6 +62,7 @@ class PopularViewModel(
             }
         }
         loading = false
+        refreshing = false
     }
 
     fun clearData() {

@@ -119,7 +119,23 @@ fun HomeScreenContent(
                 Tab(
                     selected = selectedTabIndex == index,
                     onClick = {
-                        onChangeTabIndex(index)
+                        if (selectedTabIndex == index) {
+                            if (index == 0) {
+                                scope.launch { rcmdGridState.animateScrollToItem(0) }
+                                scope.launch(Dispatchers.IO) {
+                                    recommendViewModel.resetPage()
+                                    recommendViewModel.loadMore { recommendViewModel.clearData() }
+                                }
+                            } else {
+                                scope.launch { popularGridState.animateScrollToItem(0) }
+                                scope.launch(Dispatchers.IO) {
+                                    popularViewModel.resetPage()
+                                    popularViewModel.loadMore { popularViewModel.clearData() }
+                                }
+                            }
+                        } else {
+                            onChangeTabIndex(index)
+                        }
                     },
                     text = {
                         Text(

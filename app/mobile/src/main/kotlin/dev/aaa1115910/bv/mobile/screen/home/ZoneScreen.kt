@@ -54,36 +54,37 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
-private data class ZoneTabItem(
-    val title: String,
-    val getViewModel: @Composable () -> UgcViewModel
-)
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ZoneScreen(
     modifier: Modifier = Modifier
 ) {
     val scope = rememberCoroutineScope()
-    val zoneTabs = listOf(
-        ZoneTabItem("动画") { koinViewModel<UgcDougaViewModel>() },
-        ZoneTabItem("游戏") { koinViewModel<UgcGameViewModel>() },
-        ZoneTabItem("科技") { koinViewModel<UgcTechViewModel>() },
-        ZoneTabItem("音乐") { koinViewModel<UgcMusicViewModel>() },
-        ZoneTabItem("舞蹈") { koinViewModel<UgcDanceViewModel>() },
-        ZoneTabItem("美食") { koinViewModel<UgcFoodViewModel>() },
-        ZoneTabItem("动物") { koinViewModel<UgcAnimalViewModel>() },
-        ZoneTabItem("知识") { koinViewModel<UgcKnowledgeViewModel>() },
-        ZoneTabItem("鬼畜") { koinViewModel<UgcKichikuViewModel>() },
-        ZoneTabItem("娱乐") { koinViewModel<UgcEntViewModel>() },
-        ZoneTabItem("影视") { koinViewModel<UgcCinephileViewModel>() },
-        ZoneTabItem("汽车") { koinViewModel<UgcCarViewModel>() },
-        ZoneTabItem("时尚") { koinViewModel<UgcFashionViewModel>() },
-        ZoneTabItem("运动") { koinViewModel<UgcSportsViewModel>() },
-        ZoneTabItem("VLOG") { koinViewModel<UgcVlogViewModel>() }
+    val titles = listOf(
+        "动画", "游戏", "科技", "音乐", "舞蹈",
+        "美食", "动物", "知识", "鬼畜", "娱乐",
+        "影视", "汽车", "时尚", "运动", "VLOG"
     )
 
-    val pageState = rememberPagerState(pageCount = { zoneTabs.size })
+    val viewModels = listOf(
+        koinViewModel<UgcDougaViewModel>(),
+        koinViewModel<UgcGameViewModel>(),
+        koinViewModel<UgcTechViewModel>(),
+        koinViewModel<UgcMusicViewModel>(),
+        koinViewModel<UgcDanceViewModel>(),
+        koinViewModel<UgcFoodViewModel>(),
+        koinViewModel<UgcAnimalViewModel>(),
+        koinViewModel<UgcKnowledgeViewModel>(),
+        koinViewModel<UgcKichikuViewModel>(),
+        koinViewModel<UgcEntViewModel>(),
+        koinViewModel<UgcCinephileViewModel>(),
+        koinViewModel<UgcCarViewModel>(),
+        koinViewModel<UgcFashionViewModel>(),
+        koinViewModel<UgcSportsViewModel>(),
+        koinViewModel<UgcVlogViewModel>()
+    )
+
+    val pageState = rememberPagerState(pageCount = { titles.size })
 
     Column(
         modifier = modifier
@@ -96,13 +97,17 @@ fun ZoneScreen(
             containerColor = MaterialTheme.colorScheme.surfaceContainer,
             edgePadding = 12.dp
         ) {
-            zoneTabs.forEachIndexed { index, tab ->
+            titles.forEachIndexed { index, title ->
                 Tab(
                     selected = pageState.currentPage == index,
                     onClick = {
-                        scope.launch { pageState.animateScrollToPage(index) }
+                        if (pageState.currentPage == index) {
+                            viewModels[index].reloadAll()
+                        } else {
+                            scope.launch { pageState.animateScrollToPage(index) }
+                        }
                     },
-                    text = { Text(text = tab.title) }
+                    text = { Text(text = title) }
                 )
             }
         }
@@ -111,8 +116,7 @@ fun ZoneScreen(
             state = pageState,
             modifier = Modifier.fillMaxSize()
         ) { page ->
-            val viewModel = zoneTabs[page].getViewModel()
-            ZoneCategoryPage(viewModel = viewModel)
+            ZoneCategoryPage(viewModel = viewModels[page])
         }
     }
 }

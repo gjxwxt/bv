@@ -27,7 +27,7 @@ class RecommendViewModel(
     val recommendVideoList = mutableStateListOf<UgcItem>()
 
     private var nextPage = RecommendPage()
-    var refreshing by mutableStateOf(true)
+    var refreshing by mutableStateOf(false)
     var loading by mutableStateOf(false)
 
     suspend fun loadMore(
@@ -71,6 +71,7 @@ class RecommendViewModel(
             }
         }
         loading = false
+        refreshing = false
     }
 
     fun clearData() {
