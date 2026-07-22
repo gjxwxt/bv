@@ -106,8 +106,10 @@ class VideoDetailViewModel(
     }
 
     fun updateUgcSeasonSectionVideoList(sectionIndex: Int) {
+        val ugcSeason = videoDetail?.ugcSeason ?: return
+        if (sectionIndex !in ugcSeason.sections.indices) return
         val partVideoList = mutableListOf<VideoListItem>()
-        videoDetail!!.ugcSeason!!.sections[sectionIndex].episodes.mapIndexed { epIndex, episode ->
+        ugcSeason.sections[sectionIndex].episodes.mapIndexed { epIndex, episode ->
             if (episode.pages.size == 1) {
                 episode.pages.mapIndexed { pageInd, videoPage ->
                     partVideoList.add(
