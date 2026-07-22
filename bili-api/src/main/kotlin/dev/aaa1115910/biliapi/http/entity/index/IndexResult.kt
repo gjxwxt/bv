@@ -6,58 +6,58 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class IndexResultData(
     @SerialName("has_next")
-    val hasNext: Int,
-    val list: List<IndexResultItem>,
-    val num: Int,
-    val size: Int,
-    val total: Int
+    val hasNext: Int = 0,
+    val list: List<IndexResultItem> = emptyList(),
+    val num: Int = 0,
+    val size: Int = 0,
+    val total: Int = 0
 ) {
     @Serializable
     data class IndexResultItem(
-        val badge: String,
+        val badge: String? = null,
         @SerialName("badge_info")
-        val badgeInfo: BadgeInfo,
+        val badgeInfo: BadgeInfo? = null,
         @SerialName("badge_type")
-        val badgeType: Int,
-        val cover: String,
+        val badgeType: Int = 0,
+        val cover: String = "",
         @SerialName("first_ep")
-        val firstEp: FirstEp,
+        val firstEp: FirstEp? = null,
         @SerialName("index_show")
-        val indexShow: String,
+        val indexShow: String? = null,
         @SerialName("is_finish")
-        val isFinish: Int,
-        val link: String,
+        val isFinish: Int = 0,
+        val link: String? = null,
         @SerialName("media_id")
-        val mediaId: Int,
-        val order: String,
+        val mediaId: Int = 0,
+        val order: String? = null,
         @SerialName("order_type")
-        val orderType: String,
-        val score: String,
+        val orderType: String? = null,
+        val score: String? = null,
         @SerialName("season_id")
-        val seasonId: Int,
+        val seasonId: Int = 0,
         @SerialName("season_status")
-        val seasonStatus: Int,
+        val seasonStatus: Int = 0,
         @SerialName("season_type")
-        val seasonType: Int,
-        val subTitle: String,
-        val title: String,
+        val seasonType: Int = 0,
+        val subTitle: String? = null,
+        val title: String = "",
         @SerialName("title_icon")
-        val titleIcon: String
+        val titleIcon: String? = null
     ) {
         @Serializable
         data class BadgeInfo(
             @SerialName("bg_color")
-            val bgColor: String,
+            val bgColor: String? = null,
             @SerialName("bg_color_night")
-            val bgColorNight: String,
-            val text: String
+            val bgColorNight: String? = null,
+            val text: String? = null
         )
 
         @Serializable
         data class FirstEp(
-            val cover: String,
+            val cover: String? = null,
             @SerialName("ep_id")
-            val epId: Int
+            val epId: Int = 0
         )
     }
 }

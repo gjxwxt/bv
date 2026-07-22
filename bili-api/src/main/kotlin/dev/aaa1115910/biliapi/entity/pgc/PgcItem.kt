@@ -40,11 +40,11 @@ data class PgcItem(
             return PgcItem(
                 cover = indexResultItem.cover,
                 title = indexResultItem.title,
-                subTitle = indexResultItem.subTitle,
+                subTitle = indexResultItem.subTitle ?: "",
                 seasonId = indexResultItem.seasonId,
-                episodeId = indexResultItem.firstEp.epId,
+                episodeId = indexResultItem.firstEp?.epId ?: 0,
                 seasonType = SeasonIndexType.fromId(indexResultItem.seasonType),
-                rating = indexResultItem.score
+                rating = indexResultItem.score ?: "0"
             )
         }
     }

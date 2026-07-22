@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.List
 import androidx.compose.material.icons.rounded.Alarm
-import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -17,7 +16,6 @@ import dev.aaa1115910.biliapi.entity.pgc.PgcType
 import dev.aaa1115910.bv.R
 import dev.aaa1115910.bv.tv.activities.pgc.PgcIndexActivity
 import dev.aaa1115910.bv.tv.activities.pgc.anime.AnimeTimelineActivity
-import dev.aaa1115910.bv.tv.activities.user.FollowingSeasonActivity
 import dev.aaa1115910.bv.ui.theme.BVTheme
 import dev.aaa1115910.bv.viewmodel.pgc.PgcGuoChuangViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -33,9 +31,6 @@ fun GuoChuangContent(
     val onOpenTimeline: () -> Unit = {
         context.startActivity(Intent(context, AnimeTimelineActivity::class.java))
     }
-    val onOpenFollowing: () -> Unit = {
-        context.startActivity(Intent(context, FollowingSeasonActivity::class.java))
-    }
     val onOpenIndex: () -> Unit = {
         PgcIndexActivity.actionStart(context = context, pgcType = PgcType.GuoChuang)
     }
@@ -48,7 +43,6 @@ fun GuoChuangContent(
             GuoChuangFeatureButtons(
                 modifier = Modifier.padding(vertical = 24.dp),
                 onOpenTimeline = onOpenTimeline,
-                onOpenFollowing = onOpenFollowing,
                 onOpenIndex = onOpenIndex
             )
         }
@@ -59,7 +53,6 @@ fun GuoChuangContent(
 private fun GuoChuangFeatureButtons(
     modifier: Modifier = Modifier,
     onOpenTimeline: () -> Unit,
-    onOpenFollowing: () -> Unit,
     onOpenIndex: () -> Unit
 ) {
     val buttons = listOf(
@@ -67,11 +60,6 @@ private fun GuoChuangFeatureButtons(
             stringResource(R.string.anime_home_button_timeline),
             Icons.Rounded.Alarm,
             onOpenTimeline
-        ),
-        Triple(
-            stringResource(R.string.anime_home_button_following),
-            Icons.Rounded.Favorite,
-            onOpenFollowing
         ),
         Triple(
             stringResource(R.string.anime_home_button_index),
@@ -92,7 +80,6 @@ private fun GuoChuangFeatureButtonsPreview() {
         GuoChuangFeatureButtons(
             modifier = Modifier,
             onOpenTimeline = {},
-            onOpenFollowing = {},
             onOpenIndex = {}
         )
     }

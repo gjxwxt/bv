@@ -34,15 +34,17 @@ data class IndexResultItem(
         fun fromIndexResultItem(item: dev.aaa1115910.biliapi.http.entity.index.IndexResultData.IndexResultItem): IndexResultItem {
             return IndexResultItem(
                 title = item.title,
-                subTitle = item.subTitle,
+                subTitle = item.subTitle ?: "",
                 cover = item.cover,
-                score = item.score,
-                badge = Badge(
-                    text = item.badgeInfo.text,
-                    bgColor = item.badgeInfo.bgColor,
-                    bgColorNight = item.badgeInfo.bgColorNight
-                ).takeIf { item.badgeInfo.text.isNotEmpty() },
-                indexShow = item.indexShow,
+                score = item.score ?: "0",
+                badge = item.badgeInfo?.let { badgeInfo ->
+                    Badge(
+                        text = badgeInfo.text ?: "",
+                        bgColor = badgeInfo.bgColor ?: "",
+                        bgColorNight = badgeInfo.bgColorNight ?: ""
+                    ).takeIf { it.text.isNotEmpty() }
+                },
+                indexShow = item.indexShow ?: "",
                 seasonId = item.seasonId
             )
         }
