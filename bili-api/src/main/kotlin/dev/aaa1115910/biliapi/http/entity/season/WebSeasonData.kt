@@ -47,55 +47,54 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class WebSeasonData(
-    val activity: Activity,
-    val alias: String,
+    val activity: Activity? = null,
+    val alias: String = "",
     @SerialName("bkg_cover")
-    val bkgCover: String,
-    val cover: String,
+    val bkgCover: String = "",
+    val cover: String = "",
     val episodes: List<Episode> = emptyList(),
-    val evaluate: String,
+    val evaluate: String = "",
     @SerialName("jp_title")
-    val jpTitle: String,
-    val link: String,
+    val jpTitle: String = "",
+    val link: String = "",
     @SerialName("media_id")
-    val mediaId: Int,
-    val mode: Int,
+    val mediaId: Int = 0,
+    val mode: Int = 0,
     @SerialName("new_ep")
     val newEp: NewEP,
     val payment: Payment? = null,
-    val positive: Positive,
+    val positive: Positive? = null,
     val publish: Publish,
     val rating: Rating? = null,
-    val record: String,
-    val rights: SeasonRights,
+    val record: String = "",
+    val rights: SeasonRights? = null,
     @SerialName("season_id")
-    val seasonId: Int,
+    val seasonId: Int = 0,
     @SerialName("season_title")
-    val seasonTitle: String,
+    val seasonTitle: String = "",
     val seasons: List<OtherSeason> = emptyList(),
     val section: List<SeasonSection> = emptyList(),
-    val series: Series,
+    val series: Series? = null,
     @SerialName("share_copy")
-    val shareCopy: String,
+    val shareCopy: String = "",
     @SerialName("share_sub_title")
-    val shareSubTitle: String,
+    val shareSubTitle: String = "",
     @SerialName("share_url")
-    val shareUrl: String,
-    val show: Show,
+    val shareUrl: String = "",
+    val show: Show? = null,
     @SerialName("square_cover")
-    val squareCover: String,
-    val stat: SeasonStat,
-    val status: Int,
+    val squareCover: String = "",
+    val stat: SeasonStat? = null,
+    val status: Int = 0,
     val styles: List<String> = emptyList(),
-    val subtitle: String,
-    val title: String,
-    val total: Int,
-    val type: Int,
+    val subtitle: String = "",
+    val title: String = "",
+    val total: Int = 0,
+    val type: Int = 0,
     @SerialName("up_info")
     val upInfo: UpInfo? = null,
     @SerialName("user_status")
     val userStatus: UserStatus
-
 ) {
     /**
      * 当前推广活动

@@ -41,31 +41,31 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class Episode(
-    val aid: Long,
-    val badge: String,
+    val aid: Long = 0L,
+    val badge: String = "",
     @SerialName("badge_info")
-    val badgeInfo: BadgeInfo,
+    val badgeInfo: BadgeInfo? = null,
     @SerialName("badge_type")
     val badgeType: Int = 0,
     val bvid: String = "",
-    val cid: Long,
-    val cover: String,
+    val cid: Long = 0L,
+    val cover: String = "",
     val dimension: Dimension? = null,
     val duration: Int = 0,
     @SerialName("enable_vt")
-    val enableVt: Boolean,
+    val enableVt: Boolean = false,
     @SerialName("ep_id")
     val epId: Int = 0,
     val from: String = "",
-    val id: Int,
+    val id: Int = 0,
     @SerialName("is_view_hide")
-    val isViewHide: Boolean,
-    val link: String,
+    val isViewHide: Boolean = false,
+    val link: String = "",
     @SerialName("long_title")
     val longTitle: String = "",
     @SerialName("pub_time")
-    val pubTime: Long,
-    val pv: Int,
+    val pubTime: Long = 0L,
+    val pv: Int = 0,
     @SerialName("release_date")
     val releaseDate: String = "",
     val report: Report? = null,
@@ -80,9 +80,9 @@ data class Episode(
     val stat: Stat? = null,
     @SerialName("stat_for_unity")
     val statForUnity: StatForUnity? = null,
-    val status: Int,
+    val status: Int = 0,
     val subtitle: String = "",
-    val title: String,
+    val title: String = "",
     val vid: String = ""
 ) {
     /**

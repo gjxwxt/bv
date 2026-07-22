@@ -277,9 +277,9 @@ fun SeasonInfoScreen(
                             if (seasonViewModel.lastPlayProgress == null) {
                                 logger.fInfo { "Didn't find any play record" }
                                 //未登录或无播放记录，此时lastPlayProgress==null，默认播放第一集正片
-                                playAid = seasonViewModel.seasonData?.episodes?.first()?.aid ?: -1
-                                playCid = seasonViewModel.seasonData?.episodes?.first()?.cid ?: -1
-                                playEpid = seasonViewModel.seasonData?.episodes?.first()?.id ?: -1
+                                playAid = seasonViewModel.seasonData?.episodes?.firstOrNull()?.aid ?: -1
+                                playCid = seasonViewModel.seasonData?.episodes?.firstOrNull()?.cid ?: -1
+                                playEpid = seasonViewModel.seasonData?.episodes?.firstOrNull()?.id ?: -1
                                 if (playCid == -1L) {
                                     R.string.season_no_feature_film.toast(context)
                                 } else {
