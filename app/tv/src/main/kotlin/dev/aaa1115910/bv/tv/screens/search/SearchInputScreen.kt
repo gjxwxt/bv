@@ -260,6 +260,7 @@ private fun SearchHotwords(
                     modifier = Modifier,
                     keyword = hotword.showName,
                     leadingIcon = hotword.icon ?: "",
+                    rank = index + 1,
                     onClick = { onSearch(hotword.showName) }
                 )
             }
