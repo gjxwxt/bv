@@ -120,6 +120,16 @@ fun PictureMenuList(
                     onFocusBackToParent = { onFocusStateChange(MenuFocusState.Menu) }
                 )
 
+                VideoPlayerPictureMenuItem.LongPressPlaySpeed -> StepLessMenuItem(
+                    modifier = menuItemsModifier,
+                    value = videoPlayerConfigData.longPressPlaySpeed,
+                    step = 0.5f,
+                    range = 1.5f..3f,
+                    text = "${(videoPlayerConfigData.longPressPlaySpeed * 100).roundToInt() / 100f}x",
+                    onValueChange = onPlaySpeedChange,
+                    onFocusBackToParent = { onFocusStateChange(MenuFocusState.Menu) }
+                )
+
                 VideoPlayerPictureMenuItem.Audio -> RadioMenuList(
                     modifier = menuItemsModifier,
                     items = audioList.map { audio -> audio.getDisplayName(context) },

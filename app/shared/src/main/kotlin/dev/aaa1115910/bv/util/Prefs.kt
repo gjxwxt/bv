@@ -81,6 +81,10 @@ object Prefs {
         get() = runBlocking { dsm.getPreferenceFlow(PrefKeys.prefDefaultPlaySpeedRequest).first() }
         set(value) = runBlocking { dsm.editPreference(PrefKeys.prefDefaultPlaySpeedKey, value) }
 
+    var longPressPlaySpeed: Float
+        get() = runBlocking { dsm.getPreferenceFlow(PrefKeys.prefLongPressPlaySpeedRequest).first() }
+        set(value) = runBlocking { dsm.editPreference(PrefKeys.prefLongPressPlaySpeedKey, value) }
+
     var defaultAudio: Audio
         get() = runBlocking {
             Audio.fromCode(dsm.getPreferenceFlow(PrefKeys.prefDefaultAudioRequest).first())
@@ -365,6 +369,7 @@ object PrefKeys {
     val prefBlacklistUserKey = booleanPreferencesKey("blacklist_user")
     val prefThemeTypeKey = intPreferencesKey("theme_type")
     val prefPlayModeKey = intPreferencesKey("play_mode")
+    val prefLongPressPlaySpeedKey = floatPreferencesKey("long_press_play_speed")
 
     val prefIsLoginRequest = PreferenceRequest(prefIsLoginKey, false)
     val prefUidRequest = PreferenceRequest(prefUidKey, 0)
@@ -374,6 +379,7 @@ object PrefKeys {
     val prefUidCkMd5Request = PreferenceRequest(prefUidCkMd5Key, "")
     val prefTokenExpiredDateRequest = PreferenceRequest(prefTokenExpiredDateKey, 0)
     val prefDefaultPlaySpeedRequest = PreferenceRequest(prefDefaultPlaySpeedKey, 1f)
+    val prefLongPressPlaySpeedRequest = PreferenceRequest(prefLongPressPlaySpeedKey, 2.0f)
     val prefDefaultQualityRequest = PreferenceRequest(prefDefaultQualityKey, Resolution.R1080P.code)
     val prefDefaultAudioRequest = PreferenceRequest(prefDefaultAudioKey, Audio.A192K.code)
     val prefDefaultDanmakuSizeRequest = PreferenceRequest(prefDefaultDanmakuSizeKey, 6)

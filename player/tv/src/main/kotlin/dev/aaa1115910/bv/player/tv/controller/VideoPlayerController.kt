@@ -1,6 +1,9 @@
 package dev.aaa1115910.bv.player.tv.controller
 
 import android.os.CountDownTimer
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
@@ -9,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -25,15 +29,18 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import dev.aaa1115910.biliapi.entity.video.Subtitle
 import dev.aaa1115910.bv.player.AbstractVideoPlayer
 import dev.aaa1115910.bv.player.entity.Audio
 import dev.aaa1115910.bv.player.entity.DanmakuType
+import dev.aaa1115910.bv.player.entity.LocalVideoPlayerConfigData
 import dev.aaa1115910.bv.player.entity.LocalVideoPlayerDebugInfoData
 import dev.aaa1115910.bv.player.entity.LocalVideoPlayerHistoryData
 import dev.aaa1115910.bv.player.entity.LocalVideoPlayerSeekData
@@ -90,6 +97,10 @@ fun VideoPlayerController(
     val videoPlayerStateData = LocalVideoPlayerStateData.current
     val videoPlayerDebugInfoData = LocalVideoPlayerDebugInfoData.current
     val logger = KotlinLogging.logger {}
+
+    val videoPlayerConfigData = LocalVideoPlayerConfigData.current
+    var isFastForwarding by remember { mutableStateOf(false) }
+    var normalSpeedBeforeFastForward by remember { mutableFloatStateOf(1f) }
 
     var showListController by remember { mutableStateOf(false) }
     var showMenuController by remember { mutableStateOf(false) }
@@ -175,7 +186,7 @@ fun VideoPlayerController(
                 }
 
                 when (it.key) {
-                    Key.DirectionCenter, Key.Enter, Key.Spacebar -> {
+                    Key.DirectionCenter, Key.Enter, Key.Spacebar, Key(763) -> {
                         @Suppress("KotlinConstantConditions")
                         if (!showClickableControllers && videoPlayerStateData.showBackToHistory) {
                             if (it.type == KeyEventType.KeyDown) return@onPreviewKeyEvent true
@@ -192,23 +203,28 @@ fun VideoPlayerController(
                             return@onPreviewKeyEvent true
                         }
 
-                        if (it.nativeKeyEvent.isLongPress) {
-                            logger.fInfo { "[${it.key}] long press" }
-                            showMenuController = true
+                        if (it.nativeKeyEvent.isLongPress || it.key == Key(763)) {
+                            if (!isFastForwarding) {
+                                logger.fInfo { "[${it.key}] long press -> fast forward" }
+                                normalSpeedBeforeFastForward = videoPlayerConfigData.currentVideoSpeed
+                                isFastForwarding = true
+                                onPlaySpeedChange(videoPlayerConfigData.longPressPlaySpeed)
+                            }
                             return@onPreviewKeyEvent true
                         }
 
-                        logger.fInfo { "[${it.key}] short press" }
-                        if (it.type == KeyEventType.KeyDown) return@onPreviewKeyEvent true
-                        if (videoPlayer.isPlaying) onPause() else onPlay()
+                        if (it.type == KeyEventType.KeyUp) {
+                            if (isFastForwarding) {
+                                logger.fInfo { "release fast forward" }
+                                isFastForwarding = false
+                                onPlaySpeedChange(normalSpeedBeforeFastForward)
+                                return@onPreviewKeyEvent true
+                            }
+                            logger.fInfo { "[${it.key}] short press" }
+                            if (videoPlayer.isPlaying) onPause() else onPlay()
+                            return@onPreviewKeyEvent false
+                        }
                         return@onPreviewKeyEvent false
-                    }
-
-                    // KEYCODE_CENTER_LONG
-                    // 一切设备上长按 DirectionCenter 键会是这个按键事件
-                    Key(763) -> {
-                        showMenuController = true
-                        return@onPreviewKeyEvent true
                     }
 
                     Key.DirectionUp -> {
@@ -326,6 +342,28 @@ fun VideoPlayerController(
                 Text(
                     modifier = Modifier.padding(8.dp),
                     text = videoPlayerDebugInfoData.debugInfo
+                )
+            }
+        }
+        AnimatedVisibility(
+            modifier = Modifier.align(Alignment.TopCenter),
+            visible = isFastForwarding,
+            enter = fadeIn(),
+            exit = fadeOut(),
+            label = "FastForwardHUD"
+        ) {
+            Box(
+                modifier = Modifier
+                    .padding(top = 40.dp)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(Color.Black.copy(alpha = 0.8f))
+                    .padding(horizontal = 24.dp, vertical = 10.dp)
+            ) {
+                Text(
+                    text = "${videoPlayerConfigData.longPressPlaySpeed}X 🚀 快进中",
+                    color = Color.Yellow,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold
                 )
             }
         }

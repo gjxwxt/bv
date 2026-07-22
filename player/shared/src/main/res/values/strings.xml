@@ -62,6 +62,7 @@
     <string name="video_player_menu_picture_audio">音频编码</string>
     <string name="video_player_menu_picture_codec">视频编码</string>
     <string name="video_player_menu_picture_play_speed">播放速度</string>
+    <string name="video_player_menu_picture_long_press_play_speed">长按快进倍速</string>
     <string name="video_player_menu_picture_resolution">清晰度</string>
     <string name="video_player_menu_subtitle_background_opacity">背景不透明度</string>
     <string name="video_player_menu_subtitle_bottom_padding">底部间距</string>
