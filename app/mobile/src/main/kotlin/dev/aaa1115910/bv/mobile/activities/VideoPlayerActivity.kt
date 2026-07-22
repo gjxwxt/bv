@@ -23,6 +23,7 @@ import dev.aaa1115910.bv.util.fInfo
 import dev.aaa1115910.bv.util.toast
 import dev.aaa1115910.bv.viewmodel.CommentViewModel
 import dev.aaa1115910.bv.viewmodel.VideoPlayerV3ViewModel
+import dev.aaa1115910.bv.viewmodel.SeasonViewModel
 import dev.aaa1115910.bv.viewmodel.video.VideoDetailViewModel
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.Dispatchers
@@ -58,6 +59,7 @@ class VideoPlayerActivity : ComponentActivity() {
     private val playerViewModel: VideoPlayerV3ViewModel by viewModel()
     private val commentViewModel: CommentViewModel by viewModel()
     private val videoDetailViewModel: VideoDetailViewModel by viewModel()
+    private val seasonViewModel: SeasonViewModel by viewModel()
     private val videoDetailRepository: VideoDetailRepository by inject()
     private val logger = KotlinLogging.logger {}
 
@@ -143,6 +145,11 @@ class VideoPlayerActivity : ComponentActivity() {
             commentViewModel.commentId = aid
 
             runCatching {
+                if (fromSeason || seasonId != 0 || epid != 0) {
+                    seasonViewModel.seasonId = seasonId.takeIf { it != 0 }
+                    seasonViewModel.epId = epid.takeIf { it != 0 }
+                    seasonViewModel.updateSeasonData()
+                }
                 videoDetailViewModel.loadDetail(aid, fromSeason)
             }.onFailure {
                 withContext(Dispatchers.Main) {

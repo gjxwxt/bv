@@ -71,34 +71,34 @@ data class SearchArticleResult(
  */
 @Serializable
 data class SearchBiliUserResult(
-    val type: String,
-    val mid: Long,
-    val uname: String,
-    val usign: String,
-    val fans: Int,
-    val videos: Int,
-    val upic: String,
+    val type: String = "",
+    val mid: Long = 0,
+    val uname: String = "",
+    val usign: String = "",
+    val fans: Int = 0,
+    val videos: Int = 0,
+    val upic: String = "",
     @SerialName("face_nft")
-    val faceNft: Int,
+    val faceNft: Int = 0,
     @SerialName("face_nft_type")
-    val faceNftType: Int,
+    val faceNftType: Int = 0,
     @SerialName("verify_info")
-    val verifyInfo: String,
-    val level: Int,
-    val gender: Int,
+    val verifyInfo: String = "",
+    val level: Int = 0,
+    val gender: Int = 0,
     @SerialName("is_upuser")
-    val isUpUser: Int,
+    val isUpUser: Int = 0,
     @SerialName("is_live")
-    val isLive: Int,
+    val isLive: Int = 0,
     @SerialName("room_id")
-    val roomId: Int,
-    val res: List<JsonElement>,
+    val roomId: Int = 0,
+    val res: List<JsonElement> = emptyList(),
     @SerialName("official_verify")
-    val officialVerify: OfficialVerify,
+    val officialVerify: OfficialVerify? = null,
     @SerialName("hit_columns")
-    val hitColumns: List<String>,
+    val hitColumns: List<String> = emptyList(),
     @SerialName("is_senior_member")
-    val isSeniorMember: Int
+    val isSeniorMember: Int = 0
 ) : SearchResultItem()
 
 /**
@@ -141,62 +141,62 @@ data class SearchBiliUserResult(
  */
 @Serializable
 data class SearchMediaResult(
-    val type: String,
+    val type: String = "",
     @SerialName("media_id")
-    val mediaId: Int,
-    val title: String,
+    val mediaId: Int = 0,
+    val title: String = "",
     @SerialName("org_title")
-    val orgTitle: String,
+    val orgTitle: String = "",
     @SerialName("media_type")
-    val mediaType: Int,
-    val cv: String,
-    val staff: String,
+    val mediaType: Int = 0,
+    val cv: String = "",
+    val staff: String = "",
     @SerialName("season_id")
-    val seasonId: Int,
+    val seasonId: Int = 0,
     @SerialName("is_avid")
-    val isAvid: Boolean,
+    val isAvid: Boolean = false,
     @SerialName("hit_columns")
     val hitColumns: List<String>? = null,
     @SerialName("hit_epids")
-    val hitEpids: String,
+    val hitEpids: String = "",
     @SerialName("season_type")
-    val seasonType: Int,
+    val seasonType: Int = 0,
     @SerialName("season_type_name")
-    val seasonTypeName: String,
+    val seasonTypeName: String = "",
     @SerialName("selection_style")
-    val selectionStyle: String,
+    val selectionStyle: String = "",
     @SerialName("ep_size")
-    val epSize: Int,
-    val url: String,
+    val epSize: Int = 0,
+    val url: String = "",
     @SerialName("button_text")
-    val buttonText: String,
+    val buttonText: String = "",
     @SerialName("is_follow")
-    val isFollow: Int,
+    val isFollow: Int = 0,
     @SerialName("is_selection")
-    val isSelection: Int,
+    val isSelection: Int = 0,
     val eps: List<SearchMediaEpisode>? = null,
     val badges: List<Badge>? = null,
-    val cover: String,
-    val areas: String,
-    val styles: String,
+    val cover: String = "",
+    val areas: String = "",
+    val styles: String = "",
     @SerialName("goto_url")
-    val gotoUrl: String,
-    val desc: String,
+    val gotoUrl: String = "",
+    val desc: String = "",
     @SerialName("pubtime")
-    val pubTime: Int,
+    val pubTime: Int = 0,
     @SerialName("media_mode")
-    val mediaMode: Int,
+    val mediaMode: Int = 0,
     @SerialName("fix_pubtime_str")
-    val fixPubTimeStr: String,
+    val fixPubTimeStr: String = "",
     @SerialName("media_score")
-    val mediaScore: MediaScore,
+    val mediaScore: MediaScore? = null,
     @SerialName("display_info")
     val displayInfo: List<Badge>? = null,
     @SerialName("pgc_season_id")
-    val pgcSeasonId: Int,
-    val corner: Int,
+    val pgcSeasonId: Int = 0,
+    val corner: Int = 0,
     @SerialName("index_show")
-    val indexShow: String
+    val indexShow: String = ""
 ) : SearchResultItem() {
 
     /**
@@ -397,30 +397,30 @@ data class SearchVideoResult(
     val sendDate: Int,
     val duration: String,
     @SerialName("badgepay")
-    val badgePay: Boolean,
+    val badgePay: Boolean = false,
     @SerialName("hit_columns")
-    val hitColumns: List<String>,
+    val hitColumns: List<String> = emptyList(),
     @SerialName("view_type")
-    val viewType: String,
+    val viewType: String = "",
     @SerialName("is_pay")
-    val isPay: Int,
+    val isPay: Int = 0,
     @SerialName("is_union_video")
-    val isUnionVideo: Int,
+    val isUnionVideo: Int = 0,
     @SerialName("rec_tags")
     val recTags: JsonElement? = null,
     @SerialName("new_rec_tags")
-    val newRecTags: List<JsonElement>,
+    val newRecTags: List<JsonElement> = emptyList(),
     @SerialName("rank_score")
     val rankScore: Int? = null,
-    val like: Int,
-    val upic: String,
-    val corner: String,
-    val cover: String,
-    val desc: String,
-    val url: String,
+    val like: Int = 0,
+    val upic: String = "",
+    val corner: String = "",
+    val cover: String = "",
+    val desc: String = "",
+    val url: String = "",
     @SerialName("rec_reason")
-    val recReason: String,
-    val danmaku: Int,
+    val recReason: String = "",
+    val danmaku: Int = 0,
     @SerialName("biz_data")
     val bizData: JsonElement? = null,
     @SerialName("is_charge_video")
@@ -431,12 +431,12 @@ data class SearchVideoResult(
     @Transient
     val enableVt: Boolean = _enableVt == 1,
     @SerialName("vt_display")
-    val vtDisplay: String,
-    val subtitle: String,
+    val vtDisplay: String = "",
+    val subtitle: String = "",
     @SerialName("episode_count_text")
-    val episodeCountText: String,
+    val episodeCountText: String = "",
     @SerialName("release_status")
-    val releaseStatus: Int,
+    val releaseStatus: Int = 0,
     @SerialName("is_intervene")
-    val isIntervene: Int
+    val isIntervene: Int = 0
 ) : SearchResultItem()

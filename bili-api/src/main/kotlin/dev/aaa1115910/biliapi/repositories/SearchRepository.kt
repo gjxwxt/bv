@@ -358,7 +358,7 @@ data class SearchTypeResult(
                 Pgc(
                     title = pgc.title,
                     cover = pgc.cover,
-                    star = pgc.mediaScore.score,
+                    star = pgc.mediaScore?.score ?: 0f,
                     seasonId = pgc.seasonId
                 )
 
