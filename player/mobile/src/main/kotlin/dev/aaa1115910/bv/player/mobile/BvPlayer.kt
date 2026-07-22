@@ -185,6 +185,7 @@ fun BvPlayer(
             if (videoPlayerConfigData.autoJumpHistory) {
                 logger.info { "auto jump back to history: $lastPlayed" }
                 videoPlayer.seekTo(lastPlayed.toLong() * 1000)
+                lastPlayed = 0L
                 onClearBackToHistoryData()
             } else {
                 logger.info { "show showBackToHistory: ${videoPlayerHistoryData.lastPlayed}" }

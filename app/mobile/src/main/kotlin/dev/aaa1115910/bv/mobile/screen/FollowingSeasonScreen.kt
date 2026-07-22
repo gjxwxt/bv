@@ -43,6 +43,8 @@ import dev.aaa1115910.bv.util.getDisplayName
 import dev.aaa1115910.bv.viewmodel.user.FollowingSeasonViewModel
 import org.koin.androidx.compose.koinViewModel
 
+import dev.aaa1115910.bv.mobile.activities.VideoPlayerActivity
+
 @Composable
 fun FollowingSeasonScreen(
     modifier: Modifier = Modifier,
@@ -70,7 +72,14 @@ fun FollowingSeasonScreen(
             followingSeasonViewModel.clearData()
             followingSeasonViewModel.loadMore()
         },
-        onClickSeason = {}
+        onClickSeason = { seasonCardData ->
+            VideoPlayerActivity.actionStart(
+                context = context,
+                aid = 0,
+                fromSeason = true,
+                seasonId = seasonCardData.seasonId
+            )
+        }
     )
 }
 

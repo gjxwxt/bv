@@ -54,6 +54,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
+import androidx.compose.foundation.layout.statusBarsPadding
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ZoneScreen(
@@ -90,6 +92,7 @@ fun ZoneScreen(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surfaceContainer)
+            .statusBarsPadding()
     ) {
         ScrollableTabRow(
             modifier = Modifier.zIndex(1f),
