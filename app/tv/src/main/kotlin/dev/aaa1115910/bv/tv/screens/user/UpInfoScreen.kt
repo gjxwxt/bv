@@ -27,7 +27,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.tv.material3.ExperimentalTvMaterial3Api
+import androidx.tv.material3.FilterChip
 import androidx.tv.material3.Text
+import dev.aaa1115910.biliapi.entity.user.SpaceVideoOrder
 import dev.aaa1115910.bv.R
 import dev.aaa1115910.bv.tv.component.videocard.SmallVideoCard
 import dev.aaa1115910.bv.entity.proxy.ProxyArea
@@ -35,6 +38,7 @@ import dev.aaa1115910.bv.tv.activities.video.VideoInfoActivity
 import dev.aaa1115910.bv.viewmodel.user.UserSpaceViewModel
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
 fun UpSpaceScreen(
     modifier: Modifier = Modifier,
@@ -69,13 +73,35 @@ fun UpSpaceScreen(
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.Bottom,
+                    verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(
-                        text = userSpaceViewModel.upName,
-                        fontSize = titleFontSize.sp
-                    )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = userSpaceViewModel.upName,
+                            fontSize = titleFontSize.sp
+                        )
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            FilterChip(
+                                selected = userSpaceViewModel.currentOrder == SpaceVideoOrder.PubDate,
+                                onClick = { userSpaceViewModel.changeOrder(SpaceVideoOrder.PubDate) }
+                            ) {
+                                Text(text = "最新发布")
+                            }
+                            FilterChip(
+                                selected = userSpaceViewModel.currentOrder == SpaceVideoOrder.Click,
+                                onClick = { userSpaceViewModel.changeOrder(SpaceVideoOrder.Click) }
+                            ) {
+                                Text(text = "最多播放")
+                            }
+                        }
+                    }
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {

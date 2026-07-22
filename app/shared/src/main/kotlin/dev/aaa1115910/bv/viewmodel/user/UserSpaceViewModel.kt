@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.aaa1115910.biliapi.entity.user.SpaceVideo
+import dev.aaa1115910.biliapi.entity.user.SpaceVideoOrder
 import dev.aaa1115910.biliapi.entity.user.SpaceVideoPage
 import dev.aaa1115910.biliapi.repositories.UserRepository
 import dev.aaa1115910.bv.entity.carddata.VideoCardData
@@ -31,10 +32,21 @@ class UserSpaceViewModel(
     var upMid by mutableLongStateOf(0L)
     var tvSpaceVideos = mutableStateListOf<VideoCardData>()
     var spaceVideos = mutableStateListOf<SpaceVideo>()
+    var currentOrder by mutableStateOf(SpaceVideoOrder.PubDate)
 
     private var page = SpaceVideoPage()
     private var updating = false
     val noMore get() = !page.hasNext
+
+    fun changeOrder(order: SpaceVideoOrder) {
+        if (currentOrder == order || updating) return
+        logger.fInfo { "Change UP space order to $order" }
+        currentOrder = order
+        page = SpaceVideoPage()
+        spaceVideos.clear()
+        tvSpaceVideos.clear()
+        update()
+    }
 
     fun update() {
         viewModelScope.launch(Dispatchers.Default) {
@@ -44,11 +56,12 @@ class UserSpaceViewModel(
 
     private suspend fun updateSpaceVideos() {
         if (updating || noMore) return
-        logger.fInfo { "Updating up [mid=$upMid] space videos from page $page" }
+        logger.fInfo { "Updating up [mid=$upMid] space videos from page $page with order $currentOrder" }
         updating = true
         runCatching {
             val spaceVideoData = userRepository.getSpaceVideos(
                 mid = upMid,
+                order = currentOrder,
                 page = page,
                 preferApiType = Prefs.apiType
             )
