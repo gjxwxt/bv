@@ -25,6 +25,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -196,8 +197,13 @@ fun VideoPlayerPages(
                 pgcSections = pgcSections,
                 onClickPage = onClickPage,
                 onClickEpisode = { episode ->
+                    val sectionIndex = if (pgcSections.isNotEmpty()) {
+                        pgcSections.indexOf(currentSection)
+                    } else {
+                        ugcSeason?.sections?.indexOf(currentSection) ?: 0
+                    }
                     onClickEpisode(
-                        ugcSeason!!.sections.indexOf(currentSection), episode
+                        if (sectionIndex >= 0) sectionIndex else 0, episode
                     )
                 }
             )
@@ -452,6 +458,8 @@ private fun VideoPlayerPartSheetContent(
         }
     }
 
+    var isAscending by remember { mutableStateOf(true) }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -470,13 +478,22 @@ private fun VideoPlayerPartSheetContent(
                         },
                     )
                 },
+                actions = {
+                    androidx.compose.material3.TextButton(onClick = { isAscending = !isAscending }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.Sort,
+                            contentDescription = null
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(text = if (isAscending) "正序" else "倒序")
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                 ),
                 windowInsets = WindowInsets(0, 0, 0, 0)
             )
         }
-        //Text("ugcSeason: $ugcSeason")
         if (pgcSections.isNotEmpty()) {
             if (currentSection == null && pgcSections.isNotEmpty()) {
                 currentSection = pgcSections.first()
@@ -509,17 +526,21 @@ private fun VideoPlayerPartSheetContent(
                     }
                 }
                 HorizontalDivider()
+                val sortedEpisodes = remember(currentSection, isAscending) {
+                    val indexed = currentSection!!.episodes.mapIndexed { index, ep -> index + 1 to ep }
+                    if (isAscending) indexed else indexed.reversed()
+                }
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.surface),
                     contentPadding = PaddingValues(vertical = 8.dp)
                 ) {
-                    itemsIndexed(currentSection!!.episodes) { epIndex, episode ->
+                    items(sortedEpisodes, key = { it.second.cid }) { (epIndex, episode) ->
                         if (episode.pages.size <= 1) {
                             PageListItem(
                                 modifier = modifier,
-                                text = "EP${epIndex + 1} ${episode.title}",
+                                text = "EP$epIndex ${episode.title}",
                                 duration = episode.duration,
                                 isPlaying = episode.cid == currentCid,
                                 onClick = { onClickEpisode(episode) }
@@ -530,7 +551,7 @@ private fun VideoPlayerPartSheetContent(
                                 LaunchedEffect(currentSection) { expand = true }
                                 PageListItem(
                                     modifier = modifier,
-                                    text = "EP${epIndex + 1} ${episode.title}",
+                                    text = "EP$epIndex ${episode.title}",
                                     duration = null,
                                     isPlaying = episode.pages.any { it.cid == currentCid },
                                     onClick = { expand = !expand }
@@ -584,17 +605,21 @@ private fun VideoPlayerPartSheetContent(
                     }
                 }
                 HorizontalDivider()
+                val sortedUgcEpisodes = remember(currentSection, isAscending) {
+                    val indexed = currentSection!!.episodes.mapIndexed { index, ep -> index + 1 to ep }
+                    if (isAscending) indexed else indexed.reversed()
+                }
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.surface),
                     contentPadding = PaddingValues(vertical = 8.dp)
                 ) {
-                    itemsIndexed(currentSection!!.episodes) { epIndex, episode ->
+                    items(sortedUgcEpisodes, key = { it.second.cid }) { (epIndex, episode) ->
                         if (episode.pages.size <= 1) {
                             PageListItem(
                                 modifier = modifier,
-                                text = "EP${epIndex + 1} ${episode.title}",
+                                text = "EP$epIndex ${episode.title}",
                                 duration = episode.duration,
                                 isPlaying = episode.cid == currentCid,
                                 onClick = { onClickEpisode(episode) }
@@ -605,7 +630,7 @@ private fun VideoPlayerPartSheetContent(
                                 LaunchedEffect(currentSection) { expand = true }
                                 PageListItem(
                                     modifier = modifier,
-                                    text = "EP${epIndex + 1} ${episode.title}",
+                                    text = "EP$epIndex ${episode.title}",
                                     duration = null,
                                     isPlaying = episode.pages.any { it.cid == currentCid },
                                     onClick = { expand = !expand }
