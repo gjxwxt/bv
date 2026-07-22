@@ -1,9 +1,13 @@
+@file:UseSerializers(LenientBooleanSerializer::class)
+
 package dev.aaa1115910.biliapi.http.entity.dynamic
 
 import dev.aaa1115910.biliapi.http.entity.user.Pendant
 import dev.aaa1115910.biliapi.http.entity.user.Vip
+import dev.aaa1115910.biliapi.http.util.LenientBooleanSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 
 @Serializable
 data class DynamicData(
@@ -27,7 +31,7 @@ data class DynamicData(
  */
 @Serializable
 data class DynamicItem(
-    val basic: Basic,
+    val basic: Basic? = null,
     @SerialName("id_str")
     val idStr: String? = null,
     val modules: Modules,
@@ -42,7 +46,7 @@ data class DynamicItem(
         @SerialName("comment_type")
         val commentType: Long,
         @SerialName("like_icon")
-        val likeIcon: LikeIcon,
+        val likeIcon: LikeIcon? = null,
         @SerialName("rid_str")
         val ridStr: String
     ) {
@@ -228,7 +232,7 @@ data class DynamicItem(
                 @Serializable
                 data class Archive(
                     val aid: String,
-                    val badge: Badge,
+                    val badge: Badge? = null,
                     val bvid: String,
                     val cover: String,
                     val desc: String,
@@ -238,7 +242,7 @@ data class DynamicItem(
                     val durationText: String,
                     @SerialName("jump_url")
                     val jumpUrl: String,
-                    val stat: Stat,
+                    val stat: Stat? = null,
                     val title: String,
                     val type: Int
                 ) {
@@ -306,14 +310,14 @@ data class DynamicItem(
 
                 @Serializable
                 data class Pgc(
-                    val badge: Archive.Badge,
+                    val badge: Archive.Badge? = null,
                     val cover: String,
                     val epid: Int,
                     @SerialName("jump_url")
                     val jumpUrl: String,
                     @SerialName("season_id")
                     val seasonId: Int,
-                    val stat: Archive.Stat,
+                    val stat: Archive.Stat? = null,
                     @SerialName("sub_type")
                     val subType: Int,
                     val title: String,
@@ -339,7 +343,7 @@ data class DynamicItem(
                 @Serializable
                 data class UgcSeason(
                     val aid: Long,
-                    val badge: Archive.Badge,
+                    val badge: Archive.Badge? = null,
                     val bvid: String,
                     val cover: String,
                     val desc: String? = null,
@@ -349,7 +353,7 @@ data class DynamicItem(
                     val durationText: String,
                     @SerialName("jump_url")
                     val jumpUrl: String,
-                    val stat: Archive.Stat,
+                    val stat: Archive.Stat? = null,
                     val title: String,
                     val type: Int
                 )

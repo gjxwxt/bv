@@ -27,25 +27,15 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val scope = rememberCoroutineScope()
-            var isCheckingNetwork by remember { mutableStateOf(true) }
-            var isMainlandChina by remember { mutableStateOf(false) }
 
             LaunchedEffect(Unit) {
                 scope.launch(Dispatchers.IO) {
-                    isMainlandChina = NetworkUtil.isMainlandChina()
-                    isCheckingNetwork = false
                     keepSplashScreen = false
                 }
             }
 
             BVMobileTheme {
-                if (isCheckingNetwork) {
-                    // 避免提前加载内容
-                } else if (isMainlandChina) {
-                    RegionBlockScreen()
-                } else {
-                    MobileMainScreen()
-                }
+                MobileMainScreen()
             }
         }
     }

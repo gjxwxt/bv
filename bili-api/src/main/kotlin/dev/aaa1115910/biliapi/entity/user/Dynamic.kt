@@ -111,8 +111,8 @@ data class DynamicItem(
             val dynamicType = DynamicType.fromWebValue(item.type)
             val dynamicItem = DynamicItem(
                 id = item.idStr,
-                commentId = item.basic.commentIdStr.toLongOrDefault(0),
-                commentType = item.basic.commentType,
+                commentId = item.basic?.commentIdStr?.toLongOrDefault(0) ?: 0,
+                commentType = item.basic?.commentType ?: 0,
                 type = dynamicType,
                 author = DynamicAuthorModule.fromModuleAuthor(item.modules.moduleAuthor),
                 footer = DynamicFooterModule.fromModuleStat(item.modules.moduleStat)
@@ -320,8 +320,8 @@ data class DynamicItem(
                     text = moduleArchive.desc,
                     cover = moduleArchive.cover,
                     duration = moduleArchive.durationText,
-                    play = moduleArchive.stat.play,
-                    danmaku = moduleArchive.stat.danmaku,
+                    play = moduleArchive.stat?.play ?: "",
+                    danmaku = moduleArchive.stat?.danmaku ?: "",
                 )
 
             fun fromModuleArchive(moduleArchive: bilibili.app.dynamic.v2.MdlDynArchive) =
@@ -688,8 +688,8 @@ data class DynamicItem(
                     desc = moduleDynamic.desc ?: "empty description",
                     duration = moduleDynamic.durationText,
                     url = moduleDynamic.jumpUrl,
-                    play = moduleDynamic.stat.play,
-                    danmaku = moduleDynamic.stat.danmaku,
+                    play = moduleDynamic.stat?.play ?: "",
+                    danmaku = moduleDynamic.stat?.danmaku ?: "",
                     title = moduleDynamic.title
                 )
         }
@@ -771,8 +771,8 @@ data class DynamicVideo(
                 cover = archive.cover,
                 author = author.name,
                 duration = convertStringTimeToSeconds(archive.durationText),
-                play = convertStringPlayCountToNumberPlayCount(archive.stat.play),
-                danmaku = convertStringPlayCountToNumberPlayCount(archive.stat.danmaku),
+                play = convertStringPlayCountToNumberPlayCount(archive.stat?.play ?: ""),
+                danmaku = convertStringPlayCountToNumberPlayCount(archive.stat?.danmaku ?: ""),
                 avatar = author.face,
             )
         }
