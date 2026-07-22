@@ -127,17 +127,41 @@ fun VideoPlayerPages(
             .background(MaterialTheme.colorScheme.surfaceContainer)
     ) {
         if (pgcSections.isNotEmpty()) {
-            // TODO pgc
-        } else if (ugcSeason != null) {
-            // TODO ugc
+            if (currentSection == null && pgcSections.isNotEmpty()) {
+                currentSection = pgcSections.first()
+            }
             if (currentSection != null) {
-                //VideoPlayerUgcSectionsFilter(
-                //    sections = ugcSeason.sections,
-                //    currentSection = currentSection!!,
-                //    onSectionChange = { currentSection = it }
-                //)
+                if (pgcSections.size > 1) {
+                    VideoPlayerUgcSectionsFilter(
+                        sections = pgcSections,
+                        currentSection = currentSection!!,
+                        onSectionChange = { currentSection = it }
+                    )
+                }
                 VideoPlayerEpisodesRow(
-                    //title = currentSection!!.title,
+                    episodes = currentSection!!.episodes,
+                    onClickMore = { openBottomSheet = !openBottomSheet },
+                    onClickEpisode = { episode ->
+                        onClickEpisode(
+                            pgcSections.indexOf(currentSection), episode
+                        )
+                    },
+                    currentCid = currentCid
+                )
+            }
+        } else if (ugcSeason != null) {
+            if (currentSection == null && ugcSeason.sections.isNotEmpty()) {
+                currentSection = ugcSeason.sections.first()
+            }
+            if (currentSection != null) {
+                if (ugcSeason.sections.size > 1) {
+                    VideoPlayerUgcSectionsFilter(
+                        sections = ugcSeason.sections,
+                        currentSection = currentSection!!,
+                        onSectionChange = { currentSection = it }
+                    )
+                }
+                VideoPlayerEpisodesRow(
                     episodes = currentSection!!.episodes,
                     onClickMore = { openBottomSheet = !openBottomSheet },
                     onClickEpisode = { episode ->
@@ -150,7 +174,6 @@ fun VideoPlayerPages(
             }
         } else if (pages.size > 1) {
             VideoPlayerPagesRow(
-                //title = "视频分 P",
                 pages = pages,
                 onClickMore = { openBottomSheet = !openBottomSheet },
                 onClickPage = onClickPage,
@@ -455,8 +478,82 @@ private fun VideoPlayerPartSheetContent(
         }
         //Text("ugcSeason: $ugcSeason")
         if (pgcSections.isNotEmpty()) {
-            // TODO pgc
-            Text("pgc")
+            if (currentSection == null && pgcSections.isNotEmpty()) {
+                currentSection = pgcSections.first()
+            }
+            if (currentSection != null) {
+                if (pgcSections.size > 1) {
+                    SecondaryScrollableTabRow(
+                        selectedTabIndex = pgcSections.indexOf(currentSection!!),
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                        divider = {}
+                    ) {
+                        pgcSections.forEach { section ->
+                            Tab(
+                                selected = currentSection == section,
+                                onClick = { onClickSectionTab(section) }
+                            ) {
+                                Box(
+                                    modifier = Modifier.height(48.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        modifier = Modifier.padding(horizontal = 16.dp),
+                                        text = section.title,
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+                HorizontalDivider()
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.surface),
+                    contentPadding = PaddingValues(vertical = 8.dp)
+                ) {
+                    itemsIndexed(currentSection!!.episodes) { epIndex, episode ->
+                        if (episode.pages.size <= 1) {
+                            PageListItem(
+                                modifier = modifier,
+                                text = "EP${epIndex + 1} ${episode.title}",
+                                duration = episode.duration,
+                                isPlaying = episode.cid == currentCid,
+                                onClick = { onClickEpisode(episode) }
+                            )
+                        } else {
+                            Column {
+                                var expand by remember { mutableStateOf(true) }
+                                LaunchedEffect(currentSection) { expand = true }
+                                PageListItem(
+                                    modifier = modifier,
+                                    text = "EP${epIndex + 1} ${episode.title}",
+                                    duration = null,
+                                    isPlaying = episode.pages.any { it.cid == currentCid },
+                                    onClick = { expand = !expand }
+                                )
+                                AnimatedVisibility(visible = expand) {
+                                    Column(modifier = Modifier.padding(start = 16.dp)) {
+                                        episode.pages.forEachIndexed { pageIndex, page ->
+                                            PageListItem(
+                                                modifier = modifier,
+                                                text = "P${pageIndex + 1} ${page.title}",
+                                                duration = page.duration,
+                                                isPlaying = page.cid == currentCid,
+                                                onClick = { onClickPage(page) }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    item { Spacer(modifier = Modifier.navigationBarsPadding()) }
+                }
+            }
         } else if (ugcSeason != null) {
             // TODO ugc
             if (currentSection != null) {
