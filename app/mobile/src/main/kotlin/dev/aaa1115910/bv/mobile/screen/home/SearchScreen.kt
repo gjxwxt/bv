@@ -95,6 +95,7 @@ fun SearchScreen(
         matchedHistory = searchInputViewModel.matchedSearchHistories.map { it.keyword },
         updateKeyword = updateKeyword,
         onSearch = onSearch,
+        onLoadMore = { type -> searchResultViewModel.loadMore(type) },
         onOpenUgc = onOpenUgc,
         videoSearchResult = searchResultViewModel.videoSearchResult.videos,
         mediaBangumiSearchResult = searchResultViewModel.mediaBangumiSearchResult.mediaBangumis,
@@ -113,6 +114,7 @@ fun SearchContent(
     matchedHistory: List<String>,
     updateKeyword: (String) -> Unit = {},
     onSearch: (String) -> Unit = {},
+    onLoadMore: (dev.aaa1115910.biliapi.repositories.SearchType) -> Unit = {},
     onOpenUgc: (Long) -> Unit = {},
     videoSearchResult: List<SearchTypeResult.Video>,
     mediaBangumiSearchResult: List<SearchTypeResult.Pgc>,
@@ -193,6 +195,7 @@ fun SearchContent(
                     mediaFtSearchResult = mediaFtSearchResult,
                     biliUserSearchResult = biliUserSearchResult,
                     onSearch = onSearchKeyword,
+                    onLoadMore = onLoadMore,
                     onOpenUgc = onOpenUgc
                 )
             }

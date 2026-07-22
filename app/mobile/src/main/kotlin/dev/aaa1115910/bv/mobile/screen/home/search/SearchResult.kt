@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -51,6 +53,7 @@ import dev.aaa1115910.bv.entity.carddata.VideoCardData
 import dev.aaa1115910.bv.mobile.component.search.UgcListItem
 import dev.aaa1115910.bv.mobile.component.videocard.SmallVideoCard
 import dev.aaa1115910.bv.mobile.screen.home.SearchBarResultContent
+import dev.aaa1115910.bv.util.OnBottomReached
 import dev.aaa1115910.bv.util.removeHtmlTags
 
 
@@ -75,6 +78,7 @@ fun SearchResultContent(
     mediaFtSearchResult: List<SearchTypeResult.Pgc>,
     biliUserSearchResult: List<SearchTypeResult.User>,
     onSearch: (String) -> Unit,
+    onLoadMore: (SearchType) -> Unit = {},
     onOpenUgc: (Long) -> Unit
 ) {
     val context = LocalContext.current
@@ -98,6 +102,7 @@ fun SearchResultContent(
                                 SearchBar(
                                     modifier = Modifier
                                         .padding(vertical = 4.dp)
+                                        .fillMaxWidth()
                                         .sharedElement(
                                             sharedContentState = rememberSharedContentState("searchBar"),
                                             animatedVisibilityScope = animatedVisibilityScope
@@ -109,12 +114,13 @@ fun SearchResultContent(
                         }
                         PrimaryScrollableTabRow(
                             selectedTabIndex = searchType.ordinal,
+                            edgePadding = 0.dp
                         ) {
-                            SearchType.entries.forEachIndexed { index, title ->
+                            SearchType.entries.forEach { type ->
                                 Tab(
-                                    selected = searchType.ordinal == index,
-                                    onClick = { searchType = title },
-                                    text = { Text(text = title.name) },
+                                    selected = searchType == type,
+                                    onClick = { searchType = type },
+                                    text = { Text(text = type.name) },
                                 )
                             }
                         }
@@ -188,6 +194,7 @@ fun SearchResultContent(
             when (searchType) {
                 SearchType.Video -> VideoSearchResult(
                     videoList = videoSearchResult,
+                    onLoadMore = { onLoadMore(SearchType.Video) },
                     onClickVideo = onOpenUgc
                 )
 
@@ -212,13 +219,20 @@ fun SearchResultContent(
 private fun VideoSearchResult(
     modifier: Modifier = Modifier,
     videoList: List<SearchTypeResult.Video>,
+    onLoadMore: () -> Unit,
     onClickVideo: (aid: Long) -> Unit
 ) {
     val context = LocalContext.current
     val windowSize = calculateWindowSizeClass(context as Activity).widthSizeClass
+    val listState = rememberLazyListState()
+    val gridState = rememberLazyGridState()
+
+    listState.OnBottomReached { onLoadMore() }
+    gridState.OnBottomReached { onLoadMore() }
 
     when (windowSize) {
         WindowWidthSizeClass.Compact -> LazyColumn(
+            state = listState,
             modifier = modifier
         ) {
             items(videoList) { video ->
@@ -239,6 +253,7 @@ private fun VideoSearchResult(
         }
 
         else -> LazyVerticalGrid(
+            state = gridState,
             modifier = modifier,
             columns = GridCells.Adaptive(220.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
