@@ -195,8 +195,12 @@ fun VideoPlayerPages(
                 pages = pages,
                 ugcSeason = ugcSeason,
                 pgcSections = pgcSections,
-                onClickPage = onClickPage,
+                onClickPage = { page ->
+                    openBottomSheet = false
+                    onClickPage(page)
+                },
                 onClickEpisode = { episode ->
+                    openBottomSheet = false
                     val sectionIndex = if (pgcSections.isNotEmpty()) {
                         pgcSections.indexOf(currentSection)
                     } else {
