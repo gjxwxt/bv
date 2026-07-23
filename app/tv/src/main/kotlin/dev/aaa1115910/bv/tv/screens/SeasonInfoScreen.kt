@@ -956,8 +956,10 @@ private fun SeasonSelectorContent(
     var currentSeasonIndex by remember { mutableIntStateOf(0) }
     val isCurrentSeasonInScreen by remember {
         derivedStateOf {
-            rowState.layoutInfo.visibleItemsInfo.first().index <= currentSeasonIndex
-                    && rowState.layoutInfo.visibleItemsInfo.last().index >= currentSeasonIndex
+            val visibleItems = rowState.layoutInfo.visibleItemsInfo
+            if (visibleItems.isNotEmpty()) {
+                visibleItems.first().index <= currentSeasonIndex && visibleItems.last().index >= currentSeasonIndex
+            } else false
         }
     }
 

@@ -1375,7 +1375,7 @@ object BiliHttpApi {
      */
     suspend fun updateWbi() {
         val needToUpdate =
-            wbiImgKey == null || wbiSubKey == null || System.currentTimeMillis() - wbiLastRefreshDate < 2 * 60 * 60 * 1000L
+            wbiImgKey == null || wbiSubKey == null || System.currentTimeMillis() - wbiLastRefreshDate > 2 * 60 * 60 * 1000L
         if (!needToUpdate) {
             println("Skip update wbi keys")
             return
@@ -1383,14 +1383,21 @@ object BiliHttpApi {
 
         println("Updating wbi keys...")
         runCatching {
-            val wbiData = getWebInterfaceNav().data!!.wbiImg
-            wbiImgKey = wbiData.getImgKey()
-            wbiSubKey = wbiData.getSubKey()
-            wbiLastRefreshDate = System.currentTimeMillis()
-        }.onSuccess {
-            println("Update wbi data success")
+            val wbiData = getWebInterfaceNav().data?.wbiImg
+            if (wbiData != null) {
+                wbiImgKey = wbiData.getImgKey()
+                wbiSubKey = wbiData.getSubKey()
+                wbiLastRefreshDate = System.currentTimeMillis()
+                println("Update wbi data success")
+            } else {
+                println("Update wbi data: nav data is null, using fallback keys")
+                if (wbiImgKey == null) wbiImgKey = "7cd086b5821045e58b8d29655e2e987c"
+                if (wbiSubKey == null) wbiSubKey = "49320870924d4292b772e507119b4b0e"
+            }
         }.onFailure {
             println("Update wbi data failed: ${it.stackTraceToString()}")
+            if (wbiImgKey == null) wbiImgKey = "7cd086b5821045e58b8d29655e2e987c"
+            if (wbiSubKey == null) wbiSubKey = "49320870924d4292b772e507119b4b0e"
         }
     }
 

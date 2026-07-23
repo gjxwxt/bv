@@ -67,24 +67,32 @@ fun DynamicScreen(
         logger.fInfo { "click dynamic type: ${dynamicItem.type}" }
         when (dynamicItem.type) {
             DynamicType.Av -> {
-                println("=== ${dynamicItem.video} ===")
-                VideoPlayerActivity.actionStart(
-                    context = context,
-                    aid = dynamicItem.video!!.aid,
-                    fromSeason = dynamicItem.video!!.seasonId != null
-                            && dynamicItem.video!!.seasonId != 0,
-                )
+                val video = dynamicItem.video
+                if (video != null) {
+                    println("=== $video ===")
+                    VideoPlayerActivity.actionStart(
+                        context = context,
+                        aid = video.aid,
+                        fromSeason = video.seasonId != null && video.seasonId != 0,
+                    )
+                } else {
+                    "无法获取视频信息".toast(context)
+                }
             }
 
             DynamicType.Pgc -> {
-                VideoPlayerActivity.actionStart(
-                    context = context,
-                    //aid = dynamicItem.pgc!!.epid,
-                    aid = 0,
-                    fromSeason = true,
-                    epid = dynamicItem.pgc!!.epid,
-                    seasonId = dynamicItem.pgc!!.seasonId,
-                )
+                val pgc = dynamicItem.pgc
+                if (pgc != null) {
+                    VideoPlayerActivity.actionStart(
+                        context = context,
+                        aid = 0,
+                        fromSeason = true,
+                        epid = pgc.epid,
+                        seasonId = pgc.seasonId,
+                    )
+                } else {
+                    "无法获取剧集信息".toast(context)
+                }
             }
 
             else -> {
