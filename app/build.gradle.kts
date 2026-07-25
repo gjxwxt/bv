@@ -69,7 +69,11 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            if (signingProp.exists()) signingConfig = signingConfigs.getByName("key")
+            if (signingProp.exists()) {
+                signingConfig = signingConfigs.getByName("key")
+            } else {
+                signingConfig = signingConfigs.getByName("debug")
+            }
             configure<CrashlyticsExtension> {
                 mappingFileUploadEnabled = AppConfiguration.googleServicesAvailable
             }
