@@ -130,6 +130,11 @@ fun BvPlayerController(
         if (!isFullScreen) isMenuOpen = false
     }
 
+    androidx.activity.compose.BackHandler(isMenuOpen) {
+        isMenuOpen = false
+        menuType = MenuType.None
+    }
+
     Box(
         modifier = modifier.fillMaxSize()
     ) {

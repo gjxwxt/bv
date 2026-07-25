@@ -110,25 +110,36 @@ fun PictureMenuList(
                     }
                 )
 
-                VideoPlayerPictureMenuItem.PlaySpeed -> StepLessMenuItem(
-                    modifier = menuItemsModifier,
-                    value = videoPlayerConfigData.currentVideoSpeed,
-                    step = 0.25f,
-                    range = 0.25f..2f,
-                    text = "${(videoPlayerConfigData.currentVideoSpeed * 100).roundToInt() / 100f}x",
-                    onValueChange = onPlaySpeedChange,
-                    onFocusBackToParent = { onFocusStateChange(MenuFocusState.Menu) }
-                )
+                VideoPlayerPictureMenuItem.PlaySpeed -> {
+                    val speedList = remember { listOf(0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 2.0f) }
+                    RadioMenuList(
+                        modifier = menuItemsModifier,
+                        items = speedList.map { "${it}x" },
+                        selected = speedList.indexOf(videoPlayerConfigData.currentVideoSpeed).coerceAtLeast(0),
+                        onSelectedChanged = { onPlaySpeedChange(speedList[it]) },
+                        onFocusBackToParent = {
+                            onFocusStateChange(MenuFocusState.Menu)
+                            parentMenuFocusRequester.requestFocus()
+                        }
+                    )
+                }
 
-                VideoPlayerPictureMenuItem.LongPressPlaySpeed -> StepLessMenuItem(
-                    modifier = menuItemsModifier,
-                    value = videoPlayerConfigData.longPressPlaySpeed,
-                    step = 0.5f,
-                    range = 1.5f..3f,
-                    text = "${(videoPlayerConfigData.longPressPlaySpeed * 100).roundToInt() / 100f}x",
-                    onValueChange = onPlaySpeedChange,
-                    onFocusBackToParent = { onFocusStateChange(MenuFocusState.Menu) }
-                )
+                VideoPlayerPictureMenuItem.LongPressPlaySpeed -> {
+                    val longPressSpeedList = remember { listOf(1.5f, 2.0f, 2.5f, 3.0f) }
+                    RadioMenuList(
+                        modifier = menuItemsModifier,
+                        items = longPressSpeedList.map { "${it}x" },
+                        selected = longPressSpeedList.indexOf(videoPlayerConfigData.longPressPlaySpeed).coerceAtLeast(0),
+                        onSelectedChanged = {
+                            val speed = longPressSpeedList[it]
+                            onPlaySpeedChange(speed)
+                        },
+                        onFocusBackToParent = {
+                            onFocusStateChange(MenuFocusState.Menu)
+                            parentMenuFocusRequester.requestFocus()
+                        }
+                    )
+                }
 
                 VideoPlayerPictureMenuItem.Audio -> RadioMenuList(
                     modifier = menuItemsModifier,
