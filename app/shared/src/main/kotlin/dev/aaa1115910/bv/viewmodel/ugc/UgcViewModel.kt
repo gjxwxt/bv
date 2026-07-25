@@ -38,22 +38,22 @@ abstract class UgcViewModel(
     var nextPage by mutableStateOf(UgcFeedPage())
     var hasMore by mutableStateOf(true)
     var updating by mutableStateOf(false)
+    var isError by mutableStateOf(false)
+    var errorMessage by mutableStateOf("")
     var showCarousel by mutableStateOf(true)
 
-    init {
-        viewModelScope.launch(Dispatchers.IO) {
-            initUgcRegionData()
-        }
-    }
-
-    private suspend fun initUgcRegionData() {
+    suspend fun initUgcRegionData() {
         loadUgcRegionData()
-        loadMore()
+        if (!isError) {
+            loadMore()
+        }
     }
 
     suspend fun loadUgcRegionData() {
         if (!hasMore && updating) return
         updating = true
+        isError = false
+        errorMessage = ""
         logger.fInfo { "load ugc $ugcType region data" }
         runCatching {
             val carouselData = ugcRepository.getCarousel(ugcType)
@@ -66,9 +66,8 @@ abstract class UgcViewModel(
             showCarousel = carouselItems.isNotEmpty()
         }.onFailure {
             logger.fInfo { "load $ugcType data failed: ${it.stackTraceToString()}" }
-            withContext(Dispatchers.Main) {
-                "加载 $ugcType 数据失败: ${it.message}".toast(BVApp.context)
-            }
+            isError = true
+            errorMessage = it.message ?: "加载失败"
         }
         hasMore = true
         updating = false
@@ -96,11 +95,7 @@ abstract class UgcViewModel(
             hasMore = data.items.isNotEmpty()
         }.onFailure {
             logger.fInfo { "load more $ugcType data failed: ${it.stackTraceToString()}" }
-            withContext(Dispatchers.Main) {
-                "加载 $ugcType 更多推荐失败: ${it.message}".toast(BVApp.context)
-            }
         }
         updating = false
     }
-
 }

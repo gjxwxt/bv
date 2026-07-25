@@ -63,6 +63,12 @@ fun UgcRegionScaffold(
         }
     }
 
+    LaunchedEffect(ugcViewModel) {
+        if (ugcViewModel.ugcItems.isEmpty() && !ugcViewModel.updating && !ugcViewModel.isError) {
+            ugcViewModel.initUgcRegionData()
+        }
+    }
+
     LaunchedEffect(shouldLoadMore) {
         if (shouldLoadMore) {
             ugcViewModel.loadMore()
@@ -109,6 +115,23 @@ fun UgcRegionScaffold(
                         .fillMaxWidth()
                         .height(12.dp)
                 )
+            }
+        }
+
+        if (ugcViewModel.isError && ugcViewModel.ugcItems.isEmpty()) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 48.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    androidx.tv.material3.Button(
+                        onClick = { ugcViewModel.reloadAll() }
+                    ) {
+                        androidx.tv.material3.Text(text = "加载失败，点击重试")
+                    }
+                }
             }
         }
 
@@ -217,9 +240,6 @@ data class UgcScaffoldState(
             showCarousel = carouselItems.isNotEmpty()
         }.onFailure {
             logger.fInfo { "load $ugcType data failed: ${it.stackTraceToString()}" }
-            withContext(Dispatchers.Main) {
-                "加载 $ugcType 数据失败: ${it.message}".toast(context)
-            }
         }
         hasMore = true
         updating = false
@@ -247,9 +267,6 @@ data class UgcScaffoldState(
             hasMore = data.items.isNotEmpty()
         }.onFailure {
             logger.fInfo { "load more $ugcType data failed: ${it.stackTraceToString()}" }
-            withContext(Dispatchers.Main) {
-                "加载 $ugcType 更多推荐失败: ${it.message}".toast(context)
-            }
         }
         updating = false
     }
