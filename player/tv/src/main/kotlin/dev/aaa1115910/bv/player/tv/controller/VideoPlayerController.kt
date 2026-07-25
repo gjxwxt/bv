@@ -1,6 +1,7 @@
 package dev.aaa1115910.bv.player.tv.controller
 
 import android.os.CountDownTimer
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -107,6 +108,19 @@ fun VideoPlayerController(
     var showSeekController by remember { mutableStateOf(false) }
     var showInfo by remember { mutableStateOf(false) }
     val showClickableControllers by remember { derivedStateOf { showListController || showMenuController } }
+
+    val isAnyOverlayOpen by remember {
+        derivedStateOf { showListController || showMenuController || showSeekController || showInfo }
+    }
+
+    BackHandler(enabled = isAnyOverlayOpen) {
+        logger.fInfo { "BackHandler: hiding active overlays (menu=$showMenuController, list=$showListController, seek=$showSeekController, info=$showInfo)" }
+        showMenuController = false
+        showListController = false
+        showSeekController = false
+        showInfo = false
+        onRequestFocus()
+    }
 
     var lastPressBack by remember { mutableLongStateOf(0L) }
     var hasFocus by remember { mutableStateOf(false) }
