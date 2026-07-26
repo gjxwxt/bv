@@ -27,7 +27,6 @@ import dev.aaa1115910.bv.R
 import dev.aaa1115910.bv.network.GithubApi
 import dev.aaa1115910.bv.tv.component.settings.UpdateDialog
 import dev.aaa1115910.bv.tv.screens.settings.SettingsMenuNavItem
-import dev.aaa1115910.bv.ui.theme.BVTheme
 import dev.aaa1115910.bv.util.fException
 import dev.aaa1115910.bv.util.fInfo
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -108,7 +107,7 @@ fun AboutSetting(
 @Preview(device = "id:tv_1080p")
 @Composable
 private fun AboutSettingPreview() {
-    BVTheme {
+    MaterialTheme {
         AboutSetting()
     }
 }
